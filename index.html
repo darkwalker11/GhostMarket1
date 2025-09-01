@@ -1,0 +1,18 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>GhostMarket — Access Portal</title><link rel="stylesheet" href="style.css"/><meta name="robots" content="noindex">
+<script src="https://js.hcaptcha.com/1/api.js" async defer></script></head>
+<body><div class="bg-grid"></div><div class="wrap">
+<header class="head"><div class="logo"></div><div class="brand"><h1>GhostMarket</h1><span class="sub">Access Portal</span></div></header>
+<main class="card"><h2 class="center">Create your account</h2><p class="muted center small">Complete the challenge to continue.</p>
+<form id="regForm" class="form" autocomplete="off">
+  <label>Username <input type="text" id="username" required minlength="3" maxlength="32" placeholder="Enter username" autocomplete="username"/></label>
+  <label>Password <input type="password" id="password" required minlength="8" placeholder="Enter password" autocomplete="new-password"/></label>
+  <div class="captcha"><div class="h-captcha" data-sitekey="bcec67da-59c6-48d0-8200-fcc0d8e24ec4" data-theme="dark"></div></div>
+  <button id="submitBtn" class="btn" type="submit"><span class="btn-text">Register</span><span class="spinner" aria-hidden="true"></span></button>
+  <p id="msg" class="center"></p>
+</form>
+<div class="nav"><a href="login.html">Already have an account? Login</a></div>
+</main>
+<footer class="foot muted center">© <span id="y"></span> GhostMarket</footer></div>
+<script src="register.js"></script></body></html>
