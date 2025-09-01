@@ -1,47 +1,80 @@
-// netlify/functions/register-user.js (CommonJS)
-const crypto = require("crypto");
+import { randomBytes, pbkdf2Sync } from "node:crypto";
 
-function j(body, status=200){ return { statusCode: status, headers: { "Content-Type":"application/json","Access-Control-Allow-Origin":"*" }, body: JSON.stringify(body)};}
+const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, HCAPTCHA_SECRET } = process.env;
 
-exports.handler = async (event) => {
+function json(body, status = 200) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { "content-type": "application/json; charset=utf-8" }
+  });
+}
+
+export default async (request, context) => {
   try {
-    if (event.httpMethod !== "POST") return j({ ok: false, error: "method" }, 405);
-    const { username, password, token } = JSON.parse(event.body || "{}");
-    if (!username || !password || !token) return j({ ok: false, error: "missing_fields" }, 400);
+    if (request.method !== "POST") {
+      return json({ ok: false, error: "Method not allowed" }, 405);
+    }
 
-    const secret = process.env.HCAPTCHA_SECRET;
-    const form = new URLSearchParams({ secret, response: token });
-    const capResp = await fetch("https://hcaptcha.com/siteverify", {
+    const { username, password, hcaptchaToken } = await request.json().catch(() => ({}));
+    if (!username || !password || !hcaptchaToken) {
+      return json({ ok: false, error: "Missing fields" }, 400);
+    }
+
+    // Verify hCaptcha
+    const hres = await fetch("https://hcaptcha.com/siteverify", {
       method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: form.toString(),
+      headers: { "content-type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({ secret: HCAPTCHA_SECRET || "", response: hcaptchaToken })
     });
-    const cap = await capResp.json();
-    if (!cap.success) return j({ ok: false, error: "captcha_failed" }, 403);
+    const hjson = await hres.json();
+    if (!hjson.success) {
+      console.error("hCaptcha failed:", hjson);
+      return json({ ok: false, error: "hCaptcha failed", details: hjson }, 400);
+    }
 
-    const salt = crypto.randomBytes(16);
-    const hash = await new Promise((res, rej) =>
-      crypto.scrypt(password, salt, 64, { N: 16384, r: 8, p: 1 }, (err, buf) => err ? rej(err) : res(buf))
-    );
-    const password_hash = `${salt.toString("hex")}:${hash.toString("hex")}`;
+    // Validate username
+    if (!/^[a-zA-Z0-9_]{3,32}$/.test(username)) {
+      return json({ ok: false, error: "Invalid username" }, 400);
+    }
 
-    const { SUPABASE_URL, SUPABASE_SERVICE_KEY } = process.env;
-    const resp = await fetch(`${SUPABASE_URL}/rest/v1/users`, {
+    // Check if username exists
+    const existsRes = await fetch(`${SUPABASE_URL}/rest/v1/users?username=eq.${encodeURIComponent(username)}&select=id&limit=1`, {
+      headers: {
+        apikey: SUPABASE_SERVICE_ROLE_KEY,
+        Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`
+      }
+    });
+    const exists = await existsRes.json();
+    if (Array.isArray(exists) && exists.length > 0) {
+      return json({ ok: false, error: "Username already taken" }, 409);
+    }
+
+    // Hash password
+    const salt = randomBytes(16).toString("hex");
+    const hash = pbkdf2Sync(password, salt, 100000, 64, "sha512").toString("hex");
+
+    // Insert new user
+    const insertRes = await fetch(`${SUPABASE_URL}/rest/v1/users`, {
       method: "POST",
       headers: {
-        apikey: SUPABASE_SERVICE_KEY,
-        Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
-        "Content-Type": "application/json",
-        Prefer: "return=representation",
+        "content-type": "application/json",
+        apikey: SUPABASE_SERVICE_ROLE_KEY,
+        Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+        Prefer: "return=representation"
       },
-      body: JSON.stringify({ username, password_hash }),
+      body: JSON.stringify({ username, password_hash: hash, password_salt: salt })
     });
-    if (!resp.ok) {
-      if (resp.status === 409) return j({ ok: false, error: "username_taken" }, 409);
-      const detail = await resp.text();
-      return j({ ok: false, error: "db_error", detail }, 500);
+
+    if (!insertRes.ok) {
+      const txt = await insertRes.text();
+      console.error("Supabase insert failed:", insertRes.status, txt);
+      return json({ ok: false, error: "Supabase insert failed", status: insertRes.status, details: txt }, 500);
     }
-    const [user] = await resp.json();
-    return j({ ok: true, user: { id: user.id, username: user.username } }, 201);
-  } catch (e) { return j({ ok: false, error: "exception", detail: String(e) }, 500); }
+
+    const [user] = await insertRes.json();
+    return json({ ok: true, user: { id: user.id, username: user.username } });
+  } catch (err) {
+    console.error("register-user exception:", err);
+    return json({ ok: false, error: err?.message || String(err) }, 500);
+  }
 };
