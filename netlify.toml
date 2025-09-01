@@ -2,12 +2,16 @@
   publish = "."
   functions = "netlify/functions"
 
+# (Optional but recommended for faster/leaner deploys)
 [functions]
-  directory = "netlify/functions"
   node_bundler = "esbuild"
-  node_version = "18"
 
+# Set the Node version for builds & functions
+[build.environment]
+  NODE_VERSION = "18"
+
+# Single-page-app style fallback (keeps /dashboard etc working if you add routes later)
 [[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
+  from = "/*"
+  to = "/index.html"
   status = 200
