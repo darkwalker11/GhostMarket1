@@ -1,7 +1,20 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>GhostMarket — Landing</title><link rel="stylesheet" href="style.css"/><meta name="robots" content="noindex"></head>
-<body><div class="bg-grid"></div><div class="wrap"><header class="head"><div class="logo"></div><div class="brand"><h1>GhostMarket</h1><span class="sub">Member Area</span></div></header>
+<script>
+async function fetchUser() {
+  const res = await fetch("/.netlify/functions/login-user");
+  const data = await res.json();
+  if (data?.user) {
+    document.getElementById("userWelcome").textContent = "Welcome " + data.user.username;
+  }
+}
+document.getElementById("logoutBtn").addEventListener("click", async () => {
+  await fetch("/.netlify/functions/logout");
+  window.location.href = "login.html";
+});
+fetchUser();
+</script><body><div class="bg-grid"></div><div class="wrap"><header class="head"><div class="logo"></div><div class="brand"><h1>GhostMarket</h1><span class="sub">Member Area</span></div></header>
 <main class="card"><div class="badge">✅ Logged in</div><h2 style="margin-top:14px;">Welcome</h2><p class="muted">You’ve successfully signed in. This is a placeholder landing page.</p>
 <div class="grid" style="margin-top:18px;">
   <div class="tile"><h3>Profile</h3><p class="muted">Manage your account settings.</p><a class="btnlink" href="#">Open</a></div>
