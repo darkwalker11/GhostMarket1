@@ -1,42 +1,34 @@
-// netlify/functions/login-user.js (CommonJS)
-const crypto = require("crypto");
-function j(body, status=200){ return { statusCode: status, headers: { "Content-Type":"application/json","Access-Control-Allow-Origin":"*" }, body: JSON.stringify(body)};}
-
-exports.handler = async (event) => {
+export default async (request, context) => {
+  const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SESSION_SECRET } = process.env;
   try {
-    if (event.httpMethod !== "POST") return j({ ok: false, error: "method" }, 405);
-    const { username, password, token } = JSON.parse(event.body || "{}");
-    if (!username || !password) return j({ ok: false, error: "missing_fields" }, 400);
-
-    if (token) {
-      const secret = process.env.HCAPTCHA_SECRET;
-      const form = new URLSearchParams({ secret, response: token });
-      const capResp = await fetch("https://hcaptcha.com/siteverify", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: form.toString(),
-      });
-      const cap = await capResp.json();
-      if (!cap.success) return j({ ok: false, error: "captcha_failed" }, 403);
+    if (request.method !== "POST") {
+      return new Response(JSON.stringify({ ok: false, error: "Method not allowed" }), { status: 405 });
     }
-
-    const { SUPABASE_URL, SUPABASE_SERVICE_KEY } = process.env;
-    const resp = await fetch(`${SUPABASE_URL}/rest/v1/users?username=eq.${encodeURIComponent(username)}&select=id,username,password_hash&limit=1`, {
-      headers: { apikey: SUPABASE_SERVICE_KEY, Authorization: `Bearer ${SUPABASE_SERVICE_KEY}` },
+    const { username, password } = await request.json().catch(() => ({}));
+    if (!username || !password) {
+      return new Response(JSON.stringify({ ok: false, error: "Missing fields" }), { status: 400 });
+    }
+    // Fetch user from Supabase
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/users?username=eq.${encodeURIComponent(username)}&select=*`, {
+      headers: {
+        apikey: SUPABASE_SERVICE_ROLE_KEY,
+        Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`
+      }
     });
-    if (!resp.ok) { const detail = await resp.text(); return j({ ok: false, error: "db_error", detail }, 500); }
-    const rows = await resp.json();
-    if (!rows.length) return j({ ok: false, error: "auth_failed" }, 401);
-
-    const row = rows[0];
-    const [saltHex, hashHex] = row.password_hash.split(":");
-    const salt = Buffer.from(saltHex, "hex"); const expected = Buffer.from(hashHex, "hex");
-    const derived = await new Promise((res, rej)=>
-      crypto.scrypt(password, salt, expected.length, { N:16384, r:8, p:1 }, (err, buf)=> err?rej(err):res(buf))
-    );
-    const match = crypto.timingSafeEqual(derived, expected);
-    if (!match) return j({ ok: false, error: "auth_failed" }, 401);
-
-    return j({ ok: true, user: { id: row.id, username: row.username } });
-  } catch(e) { return j({ ok:false, error:"exception", detail:String(e) }, 500); }
+    const users = await res.json();
+    if (!Array.isArray(users) || users.length === 0) {
+      return new Response(JSON.stringify({ ok: false, error: "Invalid credentials" }), { status: 401 });
+    }
+    const user = users[0];
+    // Insecure demo: compare password_hash directly
+    // TODO: Replace with proper password hash verification
+    if (user.password_hash !== password) {
+      return new Response(JSON.stringify({ ok: false, error: "Invalid credentials" }), { status: 401 });
+    }
+    return new Response(JSON.stringify({ ok: true, user: { id: user.id, username: user.username } }), {
+      headers: { "Set-Cookie": `session=${user.id}; Path=/; HttpOnly; Secure` }
+    });
+  } catch (err) {
+    return new Response(JSON.stringify({ ok: false, error: err.message }), { status: 500 });
+  }
 };

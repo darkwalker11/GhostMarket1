@@ -1,0 +1,14 @@
+<script>
+async function fetchUser() {
+  const res = await fetch("/.netlify/functions/login-user");
+  const data = await res.json();
+  if (data?.user) {
+    document.getElementById("userWelcome").textContent = "Welcome " + data.user.username;
+  }
+}
+document.getElementById("logoutBtn").addEventListener("click", async () => {
+  await fetch("/.netlify/functions/logout");
+  window.location.href = "login.html";
+});
+fetchUser();
+</script>
