@@ -13,17 +13,17 @@
         .entry-text { padding: 20px; }
         h3, h6, h5 { color: #ffffff; font-weight: 700; line-height: 1.5; }
         h3 { font-size: 1.75rem; text-align: center; }
-        .bottom-links { display: flex; justify-content: center; margin-top: 20px; font-size: 0.9rem; flex-wrap: wrap; }
-        .bottom-links a { color: #bdc0c2; margin: 0 5px; }
-        .basement-hr { border-top: 1px solid #444; max-width: 425px; margin: 1rem auto; }
-        .user-nav { display: flex; justify-content: flex-end; padding-top: 10px; }
-        .user-badge { padding: 5px 10px; border: 1px solid #444; border-radius: 20px; font-size: 0.8rem; }
-        /* Add classes used in your content that need styling (like GreenYellow) */
+        
+        /* Utility styles for injected content */
         .color-change { color: inherit; }
         .md-center { text-align: center; display: block; }
-        .task-list { padding-left: 1.3em; }
-        .force-break { word-break: break-all; }
         ul { list-style: none; padding-left: 0; }
+        .task-list { padding-left: 1.3em; }
+        .task-list input { margin-right: 0.5em; vertical-align: middle; margin-left: -1.3em; }
+        
+        /* FOOTER */
+        .user-nav { display: flex; justify-content: flex-end; padding-top: 10px; }
+        .user-badge { padding: 5px 10px; border: 1px solid #444; border-radius: 20px; font-size: 0.8rem; }
     </style>
 </head>
 <body class="m-0 p-0">
@@ -38,36 +38,36 @@
                 </div>
 
                 <div class="row no-gutters">
-                    <div class="col-12">
+                    <div class="col-12 long-words">
                         <div class="entry-text-container">
                             <div class="entry-text">
                                 <article>
                                     
-                                    <div id="zone_top" style="text-align:center; font-size: 0.8rem; margin-bottom: 10px;"></div>
+                                    <div id="zone_top">Loading...</div>
                                     
-                                    <h3 class="md-center"><span id="block_1_header" class="md-align md-center">Loading...</span></h3>
+                                    <h3 class="md-center"><span id="block_1_header">Loading...</span></h3>
 
-                                    <p id="block_2_intro"></p>
+                                    <p id="block_2_intro">Loading...</p>
 
                                     <h6>Our Main Services:</h6>
-                                    <div id="block_3_services"></div>
+                                    <div id="block_3_services">Loading...</div>
 
                                     <h6><span style="color:LightSalmon">Our Contacts:</span></h6>
-                                    <div id="block_4_contacts"></div>
+                                    <div id="block_4_contacts">Loading...</div>
 
                                     <h6><span style="color:GreenYellow">Six(6) Newly Flagged Bitcoin Wallets available</span></h6>
-                                    <p id="block_5_wallet_info"></p>
+                                    <p id="block_5_wallet_info">Loading...</p>
 
-                                    <div id="block_6_faq"></div>
+                                    <div id="block_6_faq">Loading...</div>
 
                                     <h6><span style="color:GreenYellow">CURRENTLY AVAILABLE WALLETS:</span></h6>
-                                    <div id="block_7_inventory"></div>
+                                    <div id="block_7_inventory">Loading...</div>
 
                                     <h5><span style="color:OrangeRed">Our Analysis Services Include:</span></h5>
-                                    <div id="block_8_analysis"></div>
+                                    <div id="block_8_analysis">Loading...</div>
 
                                     <h6 style="color: #ff751b;">New Section Buffer:</h6>
-                                    <div id="block_9_extra"></div>
+                                    <div id="block_9_extra">Loading...</div>
 
                                 </article>
                             </div>
@@ -99,24 +99,27 @@
             const config = data.config;
 
             if (!config || Object.keys(config).length === 0) {
-                 document.getElementById("feedContainer").innerHTML = "Error: Database config not initialized. Please visit admin.html and save the page.";
+                 document.getElementById("block_1_header").innerHTML = "Error: Config not found. Visit admin.html and save the page.";
                  return;
             }
 
-            // Map database columns to the correct HTML elements (by ID)
-            document.querySelectorAll('div[id], span[id]').forEach(el => {
-                const blockKey = el.id; // e.g., 'block_1_header'
-                const dbKey = blockKey.replace('block_', 'block_'); // Quick conversion check, though IDs match keys
+            // Loop through all block IDs and inject the saved HTML
+            const blockIds = [
+                'zone_top', 'block_1_header', 'block_2_intro', 'block_3_services', 
+                'block_4_contacts', 'block_5_wallet_info', 'block_6_faq', 'block_7_inventory', 
+                'block_8_analysis', 'block_9_extra', 'zone_bottom'
+            ];
 
-                // Ensure the block exists in the config before trying to set innerHTML
-                if (config[dbKey] != null && config[dbKey].trim() !== "") {
-                    el.innerHTML = config[dbKey];
+            blockIds.forEach((id, index) => {
+                const element = document.getElementById(id);
+                // Check for null or empty string before injection
+                if (element && config['block_' + index] != null) {
+                    element.innerHTML = config['block_' + index];
                 }
             });
         }
 
         async function initAuth() {
-            // 1. Check Login Status
             const authRes = await fetch("/.netlify/functions/login-user");
             const auth = await authRes.json();
             
@@ -125,7 +128,6 @@
                 return; 
             }
             
-            // 2. Display User and Load Content
             document.getElementById("userDisplay").textContent = "Analyst: " + auth.user.username;
             loadContent();
         }
