@@ -33,7 +33,7 @@
             <div class="container container-smooth">
                 
                 <div class="user-nav">
-                    <span id="userDisplay" class="user-badge mr-2">Analyst Access</span>
+                    <span id="userDisplay" class="user-badge mr-2">Verifying Access...</span>
                     <button id="logoutBtn" class="btn btn-sm btn-outline-secondary">Disconnect</button>
                 </div>
 
@@ -43,31 +43,31 @@
                             <div class="entry-text">
                                 <article>
                                     
-                                    <div id="zone_top">Loading...</div>
+                                    <div id="zone_top" style="text-align:center; font-size: 0.8rem; margin-bottom: 10px;"></div>
                                     
-                                    <h3 class="md-center"><span id="block_1_header">Loading...</span></h3>
+                                    <h3 class="md-center"><span id="block_1_header" class="md-align md-center"></span></h3>
 
-                                    <p id="block_2_intro">Loading...</p>
+                                    <p id="block_2_intro"></p>
 
                                     <h6>Our Main Services:</h6>
-                                    <div id="block_3_services">Loading...</div>
+                                    <div id="block_3_services"></div>
 
                                     <h6><span style="color:LightSalmon">Our Contacts:</span></h6>
-                                    <div id="block_4_contacts">Loading...</div>
+                                    <div id="block_4_contacts"></div>
 
                                     <h6><span style="color:GreenYellow">Six(6) Newly Flagged Bitcoin Wallets available</span></h6>
-                                    <p id="block_5_wallet_info">Loading...</p>
+                                    <p id="block_5_wallet_info"></p>
 
-                                    <div id="block_6_faq">Loading...</div>
+                                    <div id="block_6_faq"></div>
 
                                     <h6><span style="color:GreenYellow">CURRENTLY AVAILABLE WALLETS:</span></h6>
-                                    <div id="block_7_inventory">Loading...</div>
+                                    <div id="block_7_inventory"></div>
 
                                     <h5><span style="color:OrangeRed">Our Analysis Services Include:</span></h5>
-                                    <div id="block_8_analysis">Loading...</div>
+                                    <div id="block_8_analysis"></div>
 
                                     <h6 style="color: #ff751b;">New Section Buffer:</h6>
-                                    <div id="block_9_extra">Loading...</div>
+                                    <div id="block_9_extra"></div>
 
                                 </article>
                             </div>
@@ -93,33 +93,47 @@
 
     <script>
         async function loadContent() {
-            // Fetch content from the database
-            const res = await fetch("/.netlify/functions/cms");
-            const data = await res.json();
-            const config = data.config;
+            try {
+                // Fetch content from the database
+                const res = await fetch("/.netlify/functions/cms");
+                const data = await res.json();
+                const config = data.config;
 
-            if (!config || Object.keys(config).length === 0) {
-                 document.getElementById("block_1_header").innerHTML = "Error: Config not found. Visit admin.html and save the page.";
-                 return;
-            }
-
-            // Loop through all block IDs and inject the saved HTML
-            const blockIds = [
-                'zone_top', 'block_1_header', 'block_2_intro', 'block_3_services', 
-                'block_4_contacts', 'block_5_wallet_info', 'block_6_faq', 'block_7_inventory', 
-                'block_8_analysis', 'block_9_extra', 'zone_bottom'
-            ];
-
-            blockIds.forEach((id, index) => {
-                const element = document.getElementById(id);
-                // Check for null or empty string before injection
-                if (element && config['block_' + index] != null) {
-                    element.innerHTML = config['block_' + index];
+                if (!config || Object.keys(config).length === 0) {
+                     // If data is missing, we stop here (or show a safe error)
+                     return;
                 }
-            });
+
+                // FIXED: Explicitly map the IDs to the Database Column names
+                // This ensures we don't guess the wrong name.
+                const mapping = [
+                    "zone_top",
+                    "block_1_header",
+                    "block_2_intro",
+                    "block_3_services",
+                    "block_4_contacts",
+                    "block_5_wallet_info",
+                    "block_6_faq",
+                    "block_7_inventory",
+                    "block_8_analysis",
+                    "block_9_extra",
+                    "zone_bottom"
+                ];
+
+                mapping.forEach(key => {
+                    const element = document.getElementById(key);
+                    // Check if element exists AND database has data for it
+                    if (element && config[key] != null) {
+                        element.innerHTML = config[key];
+                    }
+                });
+            } catch (err) {
+                console.error("Content Load Error:", err);
+            }
         }
 
         async function initAuth() {
+            // 1. Check Login Status
             const authRes = await fetch("/.netlify/functions/login-user");
             const auth = await authRes.json();
             
@@ -129,6 +143,8 @@
             }
             
             document.getElementById("userDisplay").textContent = "Analyst: " + auth.user.username;
+            
+            // 2. Load Content AFTER auth is confirmed
             loadContent();
         }
 
