@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GHOSTMARKET ADMIN EDITOR</title>
+    <title>GHOST ADMIN EDITOR</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     
     <style>
@@ -21,16 +21,20 @@
         [contenteditable="true"] { 
             border: 1px dashed #adff2f; 
             background: rgba(173, 255, 47, 0.1); 
-            padding: 3px; 
+            padding: 5px; 
             min-height: 20px; 
             display: block; 
+            margin-bottom: 10px;
         }
-        [data-block="wallet_list"] li, [data-block="analysis_services"] li { padding-left: 1.3em; }
+        
+        /* LIST FIXES */
+        ul { list-style: none; padding-left: 0; }
+        li { margin-bottom: 5px; }
+        [contenteditable="true"] li { padding-left: 1.3em; }
         
         /* WORD WRAP FIXES */
         .long-words { overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; }
         .force-break, a { word-break: break-all; }
-        ul { list-style: none; padding-left: 0; }
         .color-change { color: inherit; }
         .md-center { text-align: center; display: block; }
     </style>
@@ -38,10 +42,13 @@
 <body class="m-0 p-0">
 
     <div class="admin-bar d-flex justify-content-between align-items-center">
-        <span class="text-warning">ADMIN EDITOR</span>
+        <div>
+            <strong class="text-warning mr-3">ADMIN EDITOR</strong>
+            <button class="btn btn-sm btn-outline-danger" onclick="restoreTemplate()">⚠ Reset to Default Template</button>
+        </div>
         <div>
             <button class="btn btn-sm btn-success mr-2" onclick="savePage()">Save All Changes</button>
-            <a href="dashboard.html" class="btn btn-sm btn-outline-light">Exit Editor</a>
+            <a href="dashboard.html" class="btn btn-sm btn-outline-light">Exit</a>
         </div>
     </div>
 
@@ -54,63 +61,31 @@
                             <div class="entry-text">
                                 <article>
                                     
-                                    <div data-block="zone_top" contenteditable="true" style="text-align:center; font-size: 0.8rem; margin-bottom: 10px; height: 30px; border: 1px dashed #444;">[ZONE TOP: Editable Banner/Logo Area]</div>
+                                    <div data-block="zone_top" contenteditable="true" style="text-align:center; font-size: 0.8rem; height: 30px; border: 1px dashed #444;"></div>
                                     
-                                    <h3 class="md-center" data-block="block_1_header" contenteditable="true">
-                                        <span class="md-align md-center">Welcome to the Portal - the uncensored world of infinite possibilities.</span>
-                                    </h3>
+                                    <h3 class="md-center" data-block="block_1_header" contenteditable="true">Loading...</h3>
 
-                                    <p data-block="block_2_intro" contenteditable="true">
-                                        <span style="color:#ff751b" class="color-change md-center">
-                                            We are a team of analysts and a collection of other experts from around the globe that have operated in this sector for decades, with unbeatable experiences in all techniques. We offer a wide range of services and undertake any job within any timeframe.
-                                        </span>
-                                    </p>
+                                    <div data-block="block_2_intro" contenteditable="true">Loading...</div>
 
                                     <h6>Our Main Services:</h6>
-                                    <ul data-block="block_3_services" contenteditable="true">
-                                        <li class="task-list"><input type="checkbox" disabled checked> All Intelligence Deals</li>
-                                        <li class="task-list"><input type="checkbox" disabled checked> Analysis of Flagged Crypto Wallets.</li>
-                                        <li class="task-list"><input type="checkbox" disabled checked> Analysis of Remote Access Tools (RAT)</li>
-                                        <li class="task-list"><input type="checkbox" disabled checked> Website or App development & Programming.</li>
-                                        <li class="task-list"><input type="checkbox" disabled checked> Analysis-as-a-Service(AaaS) – for all crypto drainers including the latest variants.</li>
-                                    </ul>
+                                    <div data-block="block_3_services" contenteditable="true">Loading...</div>
 
                                     <h6><span style="color:LightSalmon">Our Contacts:</span></h6>
-                                    <ul data-block="block_4_contacts" contenteditable="true">
-                                        <li class="task-list"><input type="checkbox" disabled checked> Telegram: @placeholder_handle</li>
-                                        <li class="task-list"><input type="checkbox" disabled checked> Email: <a href="mailto:cybergeniex@proton.me">contact@proton.me</a></li>
-                                        <li class="task-list"><input type="checkbox" disabled checked> Session ID: 054492ccc5ed82663580c3af08bca516e523788116968d81e3de72134d505e453f</li>
-                                    </ul>
+                                    <div data-block="block_4_contacts" contenteditable="true">Loading...</div>
 
                                     <h6><span style="color:GreenYellow">Six(6) Newly Flagged Bitcoin Wallets available</span></h6>
-                                    <p data-block="block_5_wallet_info" contenteditable="true">
-                                        <span style="color:PaleGreen">
-                                            <strong>About Flagged/Drained Bitcoin Wallets:</strong> These are flagged or drained bitcoin wallets with good balances for research. Any wallet you investigate, you can trace the balance instantly to your preferred wallet and track as you wish.<br>
-                                            For security reasons, you can only make two requests of bitcoin wallets per month, don't get greedy and get caught.
-                                        </span>
-                                    </p>
+                                    <div data-block="block_5_wallet_info" contenteditable="true">Loading...</div>
 
-                                    <ul data-block="block_6_faq" contenteditable="true">
-                                        <li class="task-list"><input type="checkbox" disabled checked> FAQ-1: WHY LIST THEM RATHER THAN HIDE: We analyze good amount and list others to spread the data all over the world. If we got greedy transactions will be easily investigated, but if people track the Bitcoins in different countries, investigation becomes elusive. So it's an OPSEC and a win-win.</li>
-                                        <li class="task-list"><input type="checkbox" disabled checked> FAQ-2: WHY TRUST US? We were highly trusted top analysts in some market places before the shutdown (e.g: Silk road, Dream Market, Alphabay, etc) and all our clients who have our personal contacts are still happily dealing with us till now, with so many positive feedbacks and referrals.</li>
-                                    </ul>
+                                    <div data-block="block_6_faq" contenteditable="true">Loading...</div>
 
                                     <h6><span style="color:GreenYellow">CURRENTLY AVAILABLE WALLETS:</span></h6>
-                                    <ul data-block="block_7_inventory" contenteditable="true">
-                                        <li class="mb-3 mb-p-0"><span class="force-break">Bitcoin Address: 16PCQnhRNZoD2jGuCNvfJS3aCZeELsX34A</span><ul><li>Private Key: C1ywgt63h<strong>*</strong><strong>*</strong>***Vjhdkh</li><li>Balance: $951.14</li><li><span style="color:GreenYellow">Price: $149</span></li><li>Verify: <a href="#">Link</a></li></ul></li>
-                                        <li class="mb-3 mb-p-0"><span class="force-break">Bitcoin Address: 3FFRtUsDyfY8WiN2MU59br31kTNDT49yXb</span><ul><li>Private Key: Qu4h7i<strong>*</strong><strong>*</strong>***Jpn</li><li>Balance: $3,249.92</li><li><span style="color:GreenYellow">Price: $826</span></li><li>Verify: <a href="#">Link</a></li></ul></li>
-                                    </ul>
+                                    <div data-block="block_7_inventory" contenteditable="true">Loading...</div>
 
                                     <h5><span style="color:OrangeRed">Our Analysis Services Include:</span></h5>
-                                    <ul data-block="block_8_analysis" contenteditable="true">
-                                        <li class="task-list"><input type="checkbox" disabled checked> We Audit all Passwords: Emails, Social media accounts, websites and databases, etc</li>
-                                        <li class="task-list"><input type="checkbox" disabled checked> We Test all devices: Windows, iOS, iPhones, Androids & inject Tools</li>
-                                        <li class="task-list"><input type="checkbox" disabled checked> We Recover stolen bitcoins from scammers - depending on the transaction status.</li>
-                                        <li class="task-list"><input type="checkbox" disabled checked> DDOS analysis, phishing, IP grabbing, database exploit</li>
-                                    </ul>
+                                    <div data-block="block_8_analysis" contenteditable="true">Loading...</div>
 
                                     <h6 style="color: #ff751b;">New Section Buffer:</h6>
-                                    <p data-block="block_9_extra" contenteditable="true">[EXTRA SECTION: Place new text content here when needed.]</p>
+                                    <div data-block="block_9_extra" contenteditable="true">[EXTRA SECTION: Place new text content here when needed.]</div>
 
                                     <div data-block="zone_bottom" contenteditable="true" style="font-size: 0.7rem; margin-top: 10px; height: 20px; color: #6c757d; border: 1px dashed #444;">[ZONE BOTTOM: Editable Copyright/Disclaimer Area]</div>
 
@@ -123,6 +98,19 @@
         </div>
     </div>
 
+    <script id="template-defaults" type="application/json">
+        {
+            "block_1_header": "<span class=\"md-align md-center\">Welcome to the Portal - the uncensored world of infinite possibilities.</span>",
+            "block_2_intro": "<span style=\"color:#ff751b\" class=\"color-change md-center\">We are a team of analysts and a collection of other experts from around the globe that have operated in this sector for decades, with unbeatable experiences in all techniques. We offer a wide range of services and undertake any job within any timeframe. Explore our robust services and feel free to contact us anytime for support or personalized request.</span>",
+            "block_3_services": "<ul><li class=\"task-list\"><input type=\"checkbox\" disabled checked> All Intelligence Deals</li><li class=\"task-list\"><input type=\"checkbox\" disabled checked> Analysis of Flagged Crypto Wallets.</li><li class=\"task-list\"><input type=\"checkbox\" disabled checked> Analysis of Remote Access Tools (RAT)</li><li class=\"task-list\"><input type=\"checkbox\" disabled checked> Website or App development & Programming.</li><li class=\"task-list\"><input type=\"checkbox\" disabled checked> Analysis-as-a-Service(AaaS) – for all crypto drainers including the latest variants.</li></ul>",
+            "block_4_contacts": "<ul><li class=\"task-list\"><input type=\"checkbox\" disabled checked> Telegram: @talk2exogator</li><li class=\"task-list\"><input type=\"checkbox\" disabled checked> Email: <a href=\"mailto:cybergeniex@proton.me\">cybergeniex@proton.me</a></li><li class=\"task-list\"><input type=\"checkbox\" disabled checked> Session ID: 054492ccc5ed82663580c3af08bca516e523788116968d81e3de72134d505e453f</li></ul>",
+            "block_5_wallet_info": "<span style=\"color:PaleGreen\"><strong>About Flagged/Drained Bitcoin Wallets:</strong> These are flagged or drained bitcoin wallets with good balances for research. Any wallet you investigate, you can trace the balance instantly to your preferred wallet and track as you wish.<br>For security reasons, you can only make two requests of bitcoin wallets per month, don't get greedy and get caught. This is a Perk offer to promote our research and other services and may not last for too long, so enjoy it while it lasts.</span>",
+            "block_6_faq": "<ul><li class=\"task-list\"><input type=\"checkbox\" disabled checked> FAQ-1: WHY LIST THEM RATHER THAN HIDE: We analyze good amount and list others to spread the data all over the world. If we got greedy transactions will be easily investigated, but if people track the Bitcoins in different countries, investigation becomes elusive. So it's an OPSEC and a win-win.</li><li class=\"task-list\"><input type=\"checkbox\" disabled checked> FAQ-2: WHY TRUST US? We were highly trusted top analysts in some market places before the shutdown (e.g: Silk road, Dream Market, Alphabay, etc) and all our clients who have our personal contacts are still happily dealing with us till now, with so many positive feedbacks and referrals. But hey! you don't have to take our words for it. You can simply verify the current available balance of the wallets using any blockchain explorer via the Verify link for each bitcoin address.</li><li class=\"task-list\"><input type=\"checkbox\" disabled checked> FAQ-3: WHAT DO I GET AFTER ACCESS? You will get all login details and Private keys, then you can safely login into the purchased wallet and withdraw the available fund to any other bitcoin wallet instantly.</li><li class=\"task-list\"><input type=\"checkbox\" disabled checked> FAQ-4: WHY USE THIS MULTI-USER DOMAIN? We have used different private domains on different servers over the years, however experience has taught us that it is very unsafe considering the nature of our services. Such private domains/servers are quite easy to track, and all data and files hosted on such severs can easily be accessed by the third-party company or the feds, therefore it goes against our Opsec. This multi-user domain works like Tor, with quite a huge users, onion-like multiple layers and untraceable routes.<br>Feel free to contact us for further questions or enquiries: <a href=\"mailto:contact@proton.me\">contact@proton.me</a></li></ul>",
+            "block_7_inventory": "<ul><li class=\"mb-3 mb-p-0\"><span class=\"force-break\">Bitcoin Address: 16PCQnhRNZoD2jGuCNvfJS3aCZeELsX34A</span><ul><li>Private Key: C1ywgt63h<strong>*</strong><strong>*</strong>***Vjhdkh</li><li>Balance: $951.14</li><li><span style=\"color:GreenYellow\">Price: $149 (Starter Bonus - you can test our service with this low budget wallet before going for the fat wallets)</span></li><li>Verify: <a href=\"#\" target=\"_blank\">Link to Blockchain</a><br><em>To make a purchase reach us via any of our contacts provided above, and you will get a prompt response.</em></li></ul></li><li class=\"mb-3 mb-p-0\"><span class=\"force-break\">Bitcoin Address: 3FFRtUsDyfY8WiN2MU59br31kTNDT49yXb</span><ul><li>Private Key: Qu4h7i<strong>*</strong><strong>*</strong>***Jpn</li><li>Balance: $3,249.92</li><li><span style=\"color:GreenYellow\">Price: $826</span></li><li>Verify: <a href=\"#\" target=\"_blank\">Link to Blockchain</a></li></ul></li><li class=\"mb-3 mb-p-0\"><span class=\"force-break\">Bitcoin Address: bc1qfhe7rq3lqzuayzjxzyt9waz9ytrs09kla3tsgr</span><ul><li>Private Key: Mq6hd1<strong>*</strong><strong>*</strong>***Gz1</li><li>Balance: $16,547.56</li><li>Price: $4,925</li><li>Verify: <a href=\"#\" target=\"_blank\">Link to Blockchain</a></li></ul></li><li class=\"mb-3 mb-p-0\"><span class=\"force-break\">Bitcoin Address: 1MUsPWodxkQyYt8fK2ZzGrchEziiW8Yt4w</span><ul><li>Private Key: L3Z6Jc<strong>*</strong><strong>*</strong>***Hy1</li><li>Balance: $22,822.65</li><li>Price: $7,285</li><li>Verify: <a href=\"#\" target=\"_blank\">Link to Blockchain</a></li></ul></li><li class=\"mb-3 mb-p-0\"><span class=\"force-break\">Bitcoin Address: 3DUdv9EBUQrcJVaA4c8Wm3kAiqHf2uAALW</span><ul><li>Private Key: KwdSHY<strong>*</strong><strong>*</strong>***d4s</li><li>Balance: $61,031.39</li><li>Price: $10,200</li><li>Verify: <a href=\"#\" target=\"_blank\">Link to Blockchain</a></li></ul></li><li class=\"mb-3 mb-p-0\"><span class=\"force-break\">Bitcoin Address: 1Cjcu2icnH5UMqPRuJSh1cy65i543e1K49</span><ul><li>Private Key: KxUxB7<strong>*</strong><strong>*</strong>rpt</li><li>Balance: $66,743.86</li><li>Price: $16,400</li><li>Verify: <a href=\"#\" target=\"_blank\">Link to Blockchain</a></li></ul></li><li class=\"mb-3 mb-p-0\"><span class=\"force-break\">Bitcoin Address: 1N8L17Z7D6bBCWkSKABDf2qqJNHT1R9fv7</span><ul><li>Private Key: KwvxmR<strong>*</strong><strong>*</strong>****nRg</li><li>Balance: $229,298</li><li>Price: $29,500</li><li>Verify: <a href=\"#\" target=\"_blank\">Link to Blockchain</a></li></ul></li></ul>",
+            "block_8_analysis": "<ul><li class=\"task-list\"><input type=\"checkbox\" disabled checked> We Audit all Passwords: Emails, Social media accounts, websites and databases, etc</li><li class=\"task-list\"><input type=\"checkbox\" disabled checked> We Test all devices: Windows, iOS, iPhones, Androids & inject Tools</li><li class=\"task-list\"><input type=\"checkbox\" disabled checked> We Recover stolen bitcoins from scammers - depending on the transaction status.</li><li class=\"task-list\"><input type=\"checkbox\" disabled checked> We audit Universities and other institutions, grade systems or retrieve exam papers</li><li class=\"task-list\"><input type=\"checkbox\" disabled checked> Clean your criminal records</li><li class=\"task-list\"><input type=\"checkbox\" disabled checked> Audit and control personal as well as corporate computers</li><li class=\"task-list\"><input type=\"checkbox\" disabled checked> DDOS analysis, phishing, IP grabbing, database exploit</li><li class=\"task-list\"><input type=\"checkbox\" disabled checked> Negative link removal from google</li><li class=\"task-list\"><input type=\"checkbox\" disabled checked> Password recovery, take down pages</li><li class=\"task-list\"><input type=\"checkbox\" disabled checked> Diagnose websites for vulnerabilities</li><li class=\"task-list\"><input type=\"checkbox\" disabled checked> Check if your phone has been hacked</li><li class=\"task-list\"><input type=\"checkbox\" disabled checked> Track or punish someone and lots more...<br>If you need any of our services or a personal request contact us via e-mail: <a href=\"mailto:contact@proton.me\">contact@proton.me</a> or any of our contacts provided above.<br>Only Cryptocurrency Payment is Accepted.</li></ul>"
+        }
+    </script>
+
     <script>
         let contentID = 1; 
         
@@ -132,17 +120,32 @@
                 const data = await res.json();
                 const config = data.config;
 
-                // FIX IS HERE: Only overwrite if the database actually has text!
-                document.querySelectorAll('[data-block]').forEach(el => {
-                    const blockKey = el.getAttribute('data-block');
-                    // Check if DB value exists AND is not empty
-                    if (config && config[blockKey] != null && config[blockKey].trim() !== "") {
-                        el.innerHTML = config[blockKey];
-                    }
-                });
+                // Load from DB if it exists and isn't mostly empty
+                if (config && config.block_3_services && config.block_3_services.length > 50) {
+                    document.querySelectorAll('[data-block]').forEach(el => {
+                        const blockKey = el.getAttribute('data-block');
+                        if (config[blockKey] != null) {
+                            el.innerHTML = config[blockKey];
+                        }
+                    });
+                } else {
+                    // DB is empty/short? Load the template automatically
+                    restoreTemplate();
+                }
             } catch (err) {
-                console.log("Database empty or connection error. Using default template.");
+                console.error(err);
+                restoreTemplate();
             }
+        }
+
+        function restoreTemplate() {
+            const defaults = JSON.parse(document.getElementById('template-defaults').textContent);
+            document.querySelectorAll('[data-block]').forEach(el => {
+                const blockKey = el.getAttribute('data-block');
+                if (defaults[blockKey]) {
+                    el.innerHTML = defaults[blockKey];
+                }
+            });
         }
 
         async function savePage() {
