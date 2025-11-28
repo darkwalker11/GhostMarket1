@@ -3,96 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>GhostMarket Portal</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     
     <style>
-        /* --- STYLES FROM SOURCE FILE --- */
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #1c1c1c; 
-            color: #bdc0c2;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            font-size: 16px;
-            line-height: 1.5;
-            overflow-x: hidden; /* Prevents horizontal scrollbar */
-        }
-
-        .container-smooth {
-            max-width: 1140px;
-            margin: 0 auto;
-            padding: 0 15px;
-        }
-
-        .entry-text {
-            min-height: 15rem;
-            padding: 20px;
-        }
-
-        /* TYPOGRAPHY */
-        h3 {
-            text-align: center;
-            margin-top: 3.5rem;
-            margin-bottom: 2.5rem;
-            font-weight: 700;
-            line-height: 1.5;
-            color: #ffffff;
-            font-size: 1.75rem;
-        }
-
-        h6 {
-            margin-top: 2rem;
-            margin-bottom: 1rem;
-            font-weight: 700;
-            line-height: 1.5;
-            color: #ffffff;
-            font-size: 1rem;
-        }
-
-        h5 {
-            margin-top: 2rem;
-            margin-bottom: 1rem;
-            font-weight: 700;
-            line-height: 1.5;
-            color: #ffffff;
-            font-size: 1.25rem;
-        }
-
-        p { margin-bottom: 1rem; }
-
-        /* --- THE FIX: FORCE TEXT WRAPPING --- */
-        .long-words {
-            overflow-wrap: break-word;
-            word-wrap: break-word;
-            word-break: break-word;
-            hyphens: auto;
-        }
-        
-        /* Force links and keys to break anywhere if they are too long */
-        a, .force-break {
-            word-break: break-all;
-        }
-
-        /* LIST STYLES */
-        ul { list-style: none; padding-left: 0; }
-        .task-list { margin-top: 0.25em; }
-        .task-list input { margin-right: 0.5em; vertical-align: middle; margin-left: -1.3em; }
-        .task-list { padding-left: 1.3em; }
-
-        a { color: #007bff; text-decoration: none; }
-        a:hover { text-decoration: underline; }
-
-        .md-center { text-align: center; display: block; }
-        .color-change { color: inherit; }
-        
-        /* FOOTER STYLES */
+        /* --- STYLES (MATCHES ADMIN) --- */
+        body { margin: 0; padding: 0; background-color: #1c1c1c; color: #bdc0c2; font-family: sans-serif; overflow-x: hidden; }
+        .container-smooth { max-width: 1140px; margin: 0 auto; padding: 0 15px; }
+        .entry-text { padding: 20px; }
+        h3, h6, h5 { color: #ffffff; font-weight: 700; line-height: 1.5; }
+        h3 { font-size: 1.75rem; text-align: center; }
         .bottom-links { display: flex; justify-content: center; margin-top: 20px; font-size: 0.9rem; flex-wrap: wrap; }
         .bottom-links a { color: #bdc0c2; margin: 0 5px; }
         .basement-hr { border-top: 1px solid #444; max-width: 425px; margin: 1rem auto; }
-        
-        li.mb-3 { margin-bottom: 1rem !important; }
-        .mb-p-0 p:last-child { margin-bottom: 0 !important; }
+        .user-nav { display: flex; justify-content: flex-end; padding-top: 10px; }
+        .user-badge { padding: 5px 10px; border: 1px solid #444; border-radius: 20px; font-size: 0.8rem; }
+        /* Add classes used in your content that need styling (like GreenYellow) */
+        .color-change { color: inherit; }
+        .md-center { text-align: center; display: block; }
+        .task-list { padding-left: 1.3em; }
+        .force-break { word-break: break-all; }
+        ul { list-style: none; padding-left: 0; }
     </style>
 </head>
 <body class="m-0 p-0">
@@ -100,137 +31,43 @@
     <div class="body">
         <div class="sub-body">
             <div class="container container-smooth">
+                
+                <div class="user-nav">
+                    <span id="userDisplay" class="user-badge mr-2">Analyst Access</span>
+                    <button id="logoutBtn" class="btn btn-sm btn-outline-secondary">Disconnect</button>
+                </div>
+
                 <div class="row no-gutters">
-                    <div class="col-12 long-words">
+                    <div class="col-12">
                         <div class="entry-text-container">
                             <div class="entry-text">
                                 <article>
                                     
-                                    <h3 class="md-center">
-                                        <span class="md-align md-center">Welcome to the Portal - the uncensored world of infinite possibilities.</span>
-                                    </h3>
+                                    <div id="zone_top" style="text-align:center; font-size: 0.8rem; margin-bottom: 10px;"></div>
+                                    
+                                    <h3 class="md-center"><span id="block_1_header" class="md-align md-center">Loading...</span></h3>
 
-                                    <p>
-                                        <span class="color-change" style="color:#ff751b">
-                                            <span class="md-align md-center">
-                                                We are a team of analysts and a collection of other experts from around the globe that have operated in this sector for decades, with unbeatable experiences in all techniques. We offer a wide range of services and undertake any job within any timeframe. Explore our robust services and feel free to contact us anytime for support or personalized request.
-                                            </span>
-                                        </span>
-                                    </p>
+                                    <p id="block_2_intro"></p>
 
                                     <h6>Our Main Services:</h6>
-                                    <ul>
-                                        <li class="task-list"><input type="checkbox" disabled checked> All Intelligence Deals</li>
-                                        <li class="task-list"><input type="checkbox" disabled checked> Analysis of Flagged Crypto Wallets.</li>
-                                        <li class="task-list"><input type="checkbox" disabled checked> Analysis of Remote Access Tools (RAT)</li>
-                                        <li class="task-list"><input type="checkbox" disabled checked> Website or App development & Programming.</li>
-                                        <li class="task-list"><input type="checkbox" disabled checked> Analysis-as-a-Service(AaaS) – for all crypto drainers including the latest variants.</li>
-                                    </ul>
+                                    <div id="block_3_services"></div>
 
-                                    <h6><span class="color-change" style="color:LightSalmon">Our Contacts:</span></h6>
-                                    <ul>
-                                        <li class="task-list"><input type="checkbox" disabled checked> Telegram: @placeholder_handle</li>
-                                        <li class="task-list"><input type="checkbox" disabled checked> Email: <a href="mailto:cybergeniex@proton.me">contact@proton.me</a></li>
-                                        <li class="task-list"><input type="checkbox" disabled checked> Session ID: <span class="force-break">054492ccc5ed82663580c3af08bca516e523788116968d81e3de72134d505e453f</span></li>
-                                    </ul>
+                                    <h6><span style="color:LightSalmon">Our Contacts:</span></h6>
+                                    <div id="block_4_contacts"></div>
 
-                                    <h6><span class="color-change" style="color:GreenYellow">Six(6) Newly Flagged Bitcoin Wallets available</span></h6>
-                                    <p>
-                                        <span class="color-change" style="color:PaleGreen">
-                                            <strong>About Flagged/Drained Bitcoin Wallets:</strong> These are flagged or drained bitcoin wallets with good balances for research. Any wallet you investigate, you can trace the balance instantly to your preferred wallet and track as you wish.<br>
-                                            For security reasons, you can only make two requests of bitcoin wallets per month, don't get greedy and get caught. This is a Perk offer to promote our research and other services and may not last for too long, so enjoy it while it lasts.
-                                        </span>
-                                    </p>
+                                    <h6><span style="color:GreenYellow">Six(6) Newly Flagged Bitcoin Wallets available</span></h6>
+                                    <p id="block_5_wallet_info"></p>
 
-                                    <ul>
-                                        <li class="task-list"><input type="checkbox" disabled checked> FAQ-1: WHY LIST THEM RATHER THAN HIDE: We analyze good amount and list others to spread the data all over the world. If we got greedy transactions will be easily investigated, but if people track the Bitcoins in different countries, investigation becomes elusive. So it's an OPSEC and a win-win.</li>
-                                        <li class="task-list"><input type="checkbox" disabled checked> FAQ-2: WHY TRUST US? We were highly trusted top analysts in some market places before the shutdown (e.g: Silk road, Dream Market, Alphabay, etc) and all our clients who have our personal contacts are still happily dealing with us till now, with so many positive feedbacks and referrals. But hey! you don't have to take our words for it. You can simply verify the current available balance of the wallets using any blockchain explorer via the Verify link for each bitcoin address.</li>
-                                        <li class="task-list"><input type="checkbox" disabled checked> FAQ-3: WHAT DO I GET AFTER ACCESS? You will get all login details and Private keys, then you can safely login into the purchased wallet and withdraw the available fund to any other bitcoin wallet instantly.</li>
-                                        <li class="task-list"><input type="checkbox" disabled checked> FAQ-4: WHY USE THIS MULTI-USER DOMAIN? We have used different private domains on different servers over the years, however experience has taught us that it is very unsafe considering the nature of our services. Such private domains/servers are quite easy to track, and all data and files hosted on such severs can easily be accessed by the third-party company or the feds, therefore it goes against our Opsec. This multi-user domain works like Tor, with quite a huge users, onion-like multiple layers and untraceable routes.<br>Feel free to contact us for further questions or enquiries: <a href="mailto:contact@proton.me">contact@proton.me</a></li>
-                                    </ul>
+                                    <div id="block_6_faq"></div>
 
-                                    <h6><span class="color-change" style="color:GreenYellow">CURRENTLY AVAILABLE WALLETS:</span></h6>
-                                    
-                                    <ul>
-                                        <li class="mb-3 mb-p-0"><span class="force-break">Bitcoin Address: 16PCQnhRNZoD2jGuCNvfJS3aCZeELsX34A</span>
-                                            <ul>
-                                                <li class="force-break">Private Key: C1ywgt63h<strong>*</strong><strong>*</strong>***Vjhdkh</li>
-                                                <li>Balance: $951.14</li>
-                                                <li><span class="color-change" style="color:GreenYellow">Price: $149 (Starter Bonus - you can test our service with this low budget wallet before going for the fat wallets)</span></li>
-                                                <li>Verify: <a href="#" target="_blank">https://www.blockchain.com/explorer/addresses/btc/16PCQnhRNZoD2jGuCNvfJS3aCZeELsX34A</a><br><em>To make a purchase reach us via any of our contacts provided above, and you will get a prompt response.</em></li>
-                                            </ul>
-                                        </li>
+                                    <h6><span style="color:GreenYellow">CURRENTLY AVAILABLE WALLETS:</span></h6>
+                                    <div id="block_7_inventory"></div>
 
-                                        <li class="mb-3 mb-p-0"><span class="force-break">Bitcoin Address: 3FFRtUsDyfY8WiN2MU59br31kTNDT49yXb</span>
-                                            <ul>
-                                                <li class="force-break">Private Key: Qu4h7i<strong>*</strong><strong>*</strong>***Jpn</li>
-                                                <li>Balance: $3,249.92</li>
-                                                <li><span class="color-change" style="color:GreenYellow">Price: $826</span></li>
-                                                <li>Verify: <a href="#" target="_blank">https://www.blockchain.com/explorer/addresses/btc/3FFRtUsDyfY8WiN2MU59br31kTNDT49yXb</a><br><em>To make a purchase reach us via any of our contacts provided above, and you will get a prompt response.</em></li>
-                                            </ul>
-                                        </li>
+                                    <h5><span style="color:OrangeRed">Our Analysis Services Include:</span></h5>
+                                    <div id="block_8_analysis"></div>
 
-                                        <li class="mb-3 mb-p-0"><span class="force-break">Bitcoin Address: bc1qfhe7rq3lqzuayzjxzyt9waz9ytrs09kla3tsgr</span>
-                                            <ul>
-                                                <li class="force-break">Private Key: Mq6hd1<strong>*</strong><strong>*</strong>***Gz1</li>
-                                                <li>Balance: $16,547.56</li>
-                                                <li>Price: $4,925</li>
-                                                <li>Verify: <a href="#" target="_blank">https://www.blockchain.com/explorer/addresses/btc/bc1qfhe7rq3lqzuayzjxzyt9waz9ytrs09kla3tsgr</a></li>
-                                            </ul>
-                                        </li>
-
-                                        <li class="mb-3 mb-p-0"><span class="force-break">Bitcoin Address: 1MUsPWodxkQyYt8fK2ZzGrchEziiW8Yt4w</span>
-                                            <ul>
-                                                <li class="force-break">Private Key: L3Z6Jc<strong>*</strong><strong>*</strong>***Hy1</li>
-                                                <li>Balance: $22,822.65</li>
-                                                <li>Price: $7,285</li>
-                                                <li>Verify: <a href="#" target="_blank">https://blockchain.com/btc/address/1MUsPWodxkQyYt8fK2ZzGrchEziiW8Yt4w</a></li>
-                                            </ul>
-                                        </li>
-
-                                        <li class="mb-3 mb-p-0"><span class="force-break">Bitcoin Address: 3DUdv9EBUQrcJVaA4c8Wm3kAiqHf2uAALW</span>
-                                            <ul>
-                                                <li class="force-break">Private Key: KwdSHY<strong>*</strong><strong>*</strong>***d4s</li>
-                                                <li>Balance: $61,031.39</li>
-                                                <li>Price: $10,200</li>
-                                                <li>Verify: <a href="#" target="_blank">https://blockchain.com/btc/address/3DUdv9EBUQrcJVaA4c8Wm3kAiqHf2uAALW</a></li>
-                                            </ul>
-                                        </li>
-
-                                        <li class="mb-3 mb-p-0"><span class="force-break">Bitcoin Address: 1Cjcu2icnH5UMqPRuJSh1cy65i543e1K49</span>
-                                            <ul>
-                                                <li class="force-break">Private Key: KxUxB7<strong>*</strong><strong>*</strong>rpt</li>
-                                                <li>Balance: $66,743.86</li>
-                                                <li>Price: $16,400</li>
-                                                <li>Verify: <a href="#" target="_blank">https://blockchain.com/btc/address/1Cjcu2icnH5UMqPRuJSh1cy65i543e1K49</a></li>
-                                            </ul>
-                                        </li>
-
-                                        <li><span class="force-break">Bitcoin Address: 1N8L17Z7D6bBCWkSKABDf2qqJNHT1R9fv7</span>
-                                            <ul>
-                                                <li class="force-break">Private Key: KwvxmR<strong>*</strong><strong>*</strong>****nRg</li>
-                                                <li>Balance: $229,298</li>
-                                                <li>Price: $29,500</li>
-                                                <li>Verify: <a href="#" target="_blank">https://blockchain.com/btc/address/1N8L17Z7D6bBCWkSKABDf2qqJNHT1R9fv7</a></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-
-                                    <h5><span class="color-change" style="color:OrangeRed">Our Analysis Services Include:</span></h5>
-                                    <ul>
-                                        <li class="task-list"><input type="checkbox" disabled checked> We Audit all Passwords: Emails, Social media accounts, websites and databases, etc</li>
-                                        <li class="task-list"><input type="checkbox" disabled checked> We Test all devices: Windows, iOS, iPhones, Androids & inject Tools</li>
-                                        <li class="task-list"><input type="checkbox" disabled checked> We Recover stolen bitcoins from scammers - depending on the transaction status.</li>
-                                        <li class="task-list"><input type="checkbox" disabled checked> We audit Universities and other institutions, grade systems or retrieve exam papers</li>
-                                        <li class="task-list"><input type="checkbox" disabled checked> Clean your criminal records</li>
-                                        <li class="task-list"><input type="checkbox" disabled checked> Audit and control personal as well as corporate computers</li>
-                                        <li class="task-list"><input type="checkbox" disabled checked> DDOS analysis, phishing, IP grabbing, database exploit</li>
-                                        <li class="task-list"><input type="checkbox" disabled checked> Negative link removal from google</li>
-                                        <li class="task-list"><input type="checkbox" disabled checked> Password recovery, take down pages</li>
-                                        <li class="task-list"><input type="checkbox" disabled checked> Diagnose websites for vulnerabilities</li>
-                                        <li class="task-list"><input type="checkbox" disabled checked> Check if your phone has been hacked</li>
-                                        <li class="task-list"><input type="checkbox" disabled checked> Track or punish someone and lots more...<br>If you need any of our services or a personal request contact us via e-mail: <a href="mailto:contact@proton.me">contact@proton.me</a> or any of our contacts provided above.<br>Only Cryptocurrency Payment is Accepted.</li>
-                                    </ul>
+                                    <h6 style="color: #ff751b;">New Section Buffer:</h6>
+                                    <div id="block_9_extra"></div>
 
                                 </article>
                             </div>
@@ -244,15 +81,61 @@
                         <a href="#">new</a>·
                         <a href="#">what</a>·
                         <a href="#">how</a>·
-                        <a href="#">langs</a>·
                         <a href="#">contacts</a>
                         <a href="#" class="ml-1">login</a>
                     </div>
+                    <div id="zone_bottom" style="font-size: 0.7rem; margin-top: 10px; color: #6c757d;"></div>
                 </div>
 
             </div>
         </div>
     </div>
 
+    <script>
+        async function loadContent() {
+            // Fetch content from the database
+            const res = await fetch("/.netlify/functions/cms");
+            const data = await res.json();
+            const config = data.config;
+
+            if (!config || Object.keys(config).length === 0) {
+                 document.getElementById("feedContainer").innerHTML = "Error: Database config not initialized. Please visit admin.html and save the page.";
+                 return;
+            }
+
+            // Map database columns to the correct HTML elements (by ID)
+            document.querySelectorAll('div[id], span[id]').forEach(el => {
+                const blockKey = el.id; // e.g., 'block_1_header'
+                const dbKey = blockKey.replace('block_', 'block_'); // Quick conversion check, though IDs match keys
+
+                // Ensure the block exists in the config before trying to set innerHTML
+                if (config[dbKey] != null && config[dbKey].trim() !== "") {
+                    el.innerHTML = config[dbKey];
+                }
+            });
+        }
+
+        async function initAuth() {
+            // 1. Check Login Status
+            const authRes = await fetch("/.netlify/functions/login-user");
+            const auth = await authRes.json();
+            
+            if (!auth || !auth.user) { 
+                window.location.href = "login.html"; 
+                return; 
+            }
+            
+            // 2. Display User and Load Content
+            document.getElementById("userDisplay").textContent = "Analyst: " + auth.user.username;
+            loadContent();
+        }
+
+        document.getElementById("logoutBtn").addEventListener("click", () => {
+            document.cookie = "session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+            window.location.href = "login.html";
+        });
+        
+        initAuth();
+    </script>
 </body>
 </html>
