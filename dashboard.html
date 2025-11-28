@@ -1,24 +1,231 @@
-<!doctype html><html lang="en"><head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>GhostMarket — Landing</title><link rel="stylesheet" href="style.css"/><meta name="robots" content="noindex"></head>
-<script>
-async function fetchUser() {
-  const res = await fetch("/.netlify/functions/login-user");
-  const data = await res.json();
-  if (data?.user) {
-    document.getElementById("userWelcome").textContent = "Welcome " + data.user.username;
-  }
-}
-document.getElementById("logoutBtn").addEventListener("click", async () => {
-  await fetch("/.netlify/functions/logout");
-  window.location.href = "login.html";
-});
-fetchUser();
-</script><body><div class="bg-grid"></div><div class="wrap"><header class="head"><div class="logo"></div><div class="brand"><h1>GhostMarket</h1><span class="sub">Member Area</span></div></header>
-<main class="card"><div class="badge">✅ Logged in</div><h2 style="margin-top:14px;">Welcome</h2><p class="muted">You’ve successfully signed in. This is a placeholder landing page.</p>
-<div class="grid" style="margin-top:18px;">
-  <div class="tile"><h3>Profile</h3><p class="muted">Manage your account settings.</p><a class="btnlink" href="#">Open</a></div>
-  <div class="tile"><h3>Announcements</h3><p class="muted">Latest updates and info.</p><a class="btnlink" href="#">View</a></div>
-  <div class="tile"><h3>Support</h3><p class="muted">Get help or contact us.</p><a class="btnlink" href="#">Contact</a></div>
-</div></main><footer class="foot muted center">© <span id="y"></span> GhostMarket</footer></div>
-<script>document.getElementById("y").textContent=new Date().getFullYear();</script></body></html>
+<!DOCTYPE html>
+<html lang="en" class="dark-mode">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GhostMarket Intel Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    
+    <style>
+        /* --- GHOSTMARKET DARK THEME --- */
+        body {
+            background-color: #1c1c1c; /* Deep Dark Background */
+            color: #bdc0c2; /* Soft Gray Text */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        .container-smooth {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #262626; /* Slightly lighter panel */
+            min-height: 100vh;
+            border-left: 1px solid #333;
+            border-right: 1px solid #333;
+        }
+
+        /* Top Navigation Bar */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #444;
+            margin-bottom: 30px;
+        }
+
+        .user-badge {
+            background-color: #333;
+            padding: 6px 12px;
+            border-radius: 4px;
+            color: #adff2f; /* Neon Green Text */
+            border: 1px solid #adff2f;
+            font-size: 0.9rem;
+            font-family: monospace;
+        }
+
+        .btn-logout {
+            background: transparent;
+            color: #bdc0c2;
+            border: 1px solid #bdc0c2;
+            padding: 5px 15px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        .btn-logout:hover {
+            background-color: #bdc0c2;
+            color: #1c1c1c;
+        }
+
+        /* Headings */
+        h3, h4, h5 {
+            color: #ffffff;
+            font-weight: 300;
+        }
+        h3 { margin-bottom: 1rem; }
+        h4 { margin-top: 30px; margin-bottom: 20px; font-size: 1.4rem; border-bottom: 1px solid #444; padding-bottom: 10px; }
+
+        /* Report Cards (The List Items) */
+        .report-card {
+            background-color: #333;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 4px;
+            border-left: 4px solid #007bff; /* Default Blue */
+            transition: background 0.2s;
+        }
+        .report-card:hover {
+            background-color: #3d3d3d;
+        }
+        
+        .report-card.critical { border-left-color: #ff4500; } /* Red */
+        .report-card.pending { border-left-color: #ffc107; } /* Yellow */
+        .report-card.secure { border-left-color: #adff2f; } /* Green */
+
+        .report-title {
+            color: #fff;
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .report-meta {
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        /* Action Buttons */
+        .btn-ghost-primary {
+            width: 100%;
+            border: 1px dashed #555;
+            color: #aaa;
+            padding: 10px;
+            background: transparent;
+        }
+        .btn-ghost-primary:hover {
+            border-color: #adff2f;
+            color: #adff2f;
+        }
+
+        /* Stats Grid */
+        .stat-box {
+            background: #2a2a2a;
+            padding: 15px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .stat-num { font-size: 2rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="container-smooth">
+        
+        <div class="top-nav">
+            <div>
+                <span style="display:block; font-size:0.7rem; color:#888;">CURRENT ANALYST</span>
+                <span id="userWelcome" class="user-badge">Verifying Identity...</span>
+            </div>
+            <button id="logoutBtn" class="btn-logout">Disconnect</button>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-4">
+                <div class="stat-box">
+                    <div class="stat-num" style="color: #ff4500;">3</div>
+                    <small>Active Threats</small>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="stat-box">
+                    <div class="stat-num" style="color: #ffc107;">12</div>
+                    <small>Pending Review</small>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="stat-box">
+                    <div class="stat-num" style="color: #adff2f;">89</div>
+                    <small>Neutralized</small>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn btn-ghost-primary mb-4">+ File New Scam Report</button>
+
+        <h4>High Priority Targets</h4>
+        
+        <div class="report-card critical">
+            <span class="report-title">Crypto Drainer: "Red Vibe"</span>
+            <div class="report-meta">
+                Source: Telegram | Status: <strong>ACTIVE</strong> | Reports: 145
+            </div>
+        </div>
+
+        <div class="report-card critical">
+            <span class="report-title">Phishing Domain: secure-login-att.com</span>
+            <div class="report-meta">
+                Source: SMS | Status: <strong>ACTIVE</strong> | Reports: 22
+            </div>
+        </div>
+
+        <h4>Recent Submissions</h4>
+
+        <div class="report-card pending">
+            <span class="report-title">Suspicious Wallet: 0x7a...9f2</span>
+            <div class="report-meta">
+                Source: User Report | Status: Investigating
+            </div>
+        </div>
+
+        <div class="report-card secure">
+            <span class="report-title">Fake Instagram Shop: "LuxuryKicks"</span>
+            <div class="report-meta">
+                Source: Web | Status: <strong>SHUT DOWN</strong>
+            </div>
+        </div>
+
+        <div class="text-center mt-5 text-muted" style="font-size: 0.8rem;">
+            GhostMarket Intelligence Portal &copy; 2025
+        </div>
+
+    </div>
+
+    <script>
+        // 1. Check if user is logged in immediately when page loads
+        async function fetchUser() {
+            try {
+                // Call our Netlify Function to check the cookie
+                const res = await fetch("/.netlify/functions/login-user");
+                const data = await res.json();
+                
+                if (data && data.user) {
+                    // Success! Update the badge with username
+                    document.getElementById("userWelcome").textContent = data.user.username;
+                } else {
+                    // Fail! User is not logged in. Kick them out.
+                    console.warn("No active session found. Redirecting...");
+                    window.location.href = "login.html";
+                }
+            } catch (err) {
+                console.error("Auth Check Error", err);
+                // If the server is down, maybe don't kick them out instantly, 
+                // but for security, usually we do:
+                // window.location.href = "login.html";
+            }
+        }
+
+        // 2. Handle Logout Button
+        document.getElementById("logoutBtn").addEventListener("click", async () => {
+            // Delete the cookie by expiring it
+            document.cookie = "session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+            
+            // Redirect to login page
+            window.location.href = "login.html";
+        });
+
+        // Run the check!
+        fetchUser();
+    </script>
+
+</body>
+</html>
