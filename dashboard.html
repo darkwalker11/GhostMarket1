@@ -3,66 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GhostMarket Intel</title>
+    <title>GhostMarket Portal</title>
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    
     <style>
-        body { background-color: #1c1c1c; color: #bdc0c2; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
-        .container-smooth { max-width: 900px; margin: 0 auto; padding: 20px; background-color: #262626; min-height: 100vh; border-left: 1px solid #333; border-right: 1px solid #333; }
-        .report-card { background-color: #333; margin-bottom: 15px; padding: 15px; border-radius: 4px; border-left: 4px solid #007bff; }
-        .report-card.critical { border-left-color: #ff4500; }
-        .report-card.pending { border-left-color: #ffc107; }
-        .report-card.secure { border-left-color: #adff2f; }
-        .report-title { color: #fff; font-weight: 600; font-size: 1.1rem; display: block; }
-        .report-meta { font-size: 0.85rem; color: #888; margin-top: 5px; }
-        .user-badge { border: 1px solid #444; padding: 5px 10px; border-radius: 20px; font-size: 0.8rem; }
+        /* --- EXACT STYLES FROM SOURCE --- */
+        body {
+            background-color: #1c1c1c;
+            color: #bdc0c2;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .container-smooth {
+            max-width: 800px; /* Matches source width */
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #262626; /* The card background color */
+            min-height: 100vh;
+            border-left: 1px solid #333;
+            border-right: 1px solid #333;
+        }
+
+        /* Typography */
+        h3 {
+            font-size: 1.75rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        h6 {
+            font-size: 1rem;
+            margin-top: 2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        p { margin-bottom: 1rem; }
+
+        /* Custom Colors from Source */
+        .color-orange { color: #ff751b; }
+        .color-green { color: #adff2f; }
+        .color-salmon { color: LightSalmon; }
+        .color-pale-green { color: PaleGreen; }
+        .color-red { color: OrangeRed; }
+
+        /* List Styling */
+        ul { list-style: none; padding-left: 0; }
+        li { margin-bottom: 0.25rem; }
+        
+        /* The checkbox style bullet */
+        .task-list-item::before {
+            content: "☑ "; /* Visual simulation of the checked box */
+            margin-right: 5px;
+        }
+
+        a { color: #007bff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        hr { border-top: 1px solid #444; margin: 2rem 0; }
     </style>
 </head>
 <body>
 
     <div class="container-smooth">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <span class="user-badge" id="userDisplay">Verifying...</span>
-            <button id="logoutBtn" class="btn btn-sm btn-outline-secondary">Disconnect</button>
+        
+        <!-- Header -->
+        <h3>Welcome to the GhostMarket Portal</h3>
+        
+        <!-- Intro Paragraph -->
+        <p class="text-center color-orange">
+            We are a team of cybersecurity analysts tracking digital threats. We offer a wide range of intelligence services and undertake detailed investigations. Explore our robust database and contact us for support.
+        </p>
+
+        <!-- Section 1 -->
+        <h6>Our Main Services:</h6>
+        <ul>
+            <li class="task-list-item">Threat Intelligence Reports</li>
+            <li class="task-list-item">Scam Asset Tracking</li>
+            <li class="task-list-item">Malware Analysis</li>
+            <li class="task-list-item">Phishing Takedowns</li>
+            <li class="task-list-item">Secure Code Auditing</li>
+        </ul>
+
+        <!-- Section 2 -->
+        <h6><span class="color-salmon">Our Contacts:</span></h6>
+        <ul>
+            <li class="task-list-item">Telegram: @ghostmarket_intel</li>
+            <li class="task-list-item">Email: <a href="#">contact@ghostmarket.cards</a></li>
+            <li class="task-list-item">Session ID: 054492ccc5ed82663580c3af08bca516e523788116968d81e3de72134d505e453f</li>
+        </ul>
+
+        <!-- Section 3 -->
+        <h6><span class="color-green">Recent Flagged Wallets</span></h6>
+        <p><span class="color-pale-green"><strong>About This Data:</strong> These wallets have been identified as high-risk. Funds traced to these addresses are considered compromised.</span></p>
+        
+        <ul>
+            <li>
+                Bitcoin Address: 16PCQnhRNZoD2jGuCNvfJS3aCZeELsX34A
+                <ul>
+                    <li>Risk Level: High</li>
+                    <li>Balance: $951.14 (Stolen Funds)</li>
+                    <li><span class="color-green">Status: MONITORING</span></li>
+                </ul>
+            </li>
+            <br>
+            <li>
+                Bitcoin Address: 3FFRtUsDyfY8WiN2MU59br31kTNDT49yXb
+                <ul>
+                    <li>Risk Level: Critical</li>
+                    <li>Balance: $3,249.92</li>
+                    <li><span class="color-green">Status: ACTIVE INVESTIGATION</span></li>
+                </ul>
+            </li>
+        </ul>
+
+        <!-- Section 4 -->
+        <h6><span class="color-red">Active Investigation Categories:</span></h6>
+        <ul>
+            <li class="task-list-item">Social Media Account Compromise</li>
+            <li class="task-list-item">Mobile Device Exploits (iOS/Android)</li>
+            <li class="task-list-item">Crypto Recovery Scams</li>
+            <li class="task-list-item">Academic Fraud Rings</li>
+            <li class="task-list-item">Corporate Espionage</li>
+            <li class="task-list-item">DDoS & Phishing Networks</li>
+        </ul>
+
+        <hr>
+        
+        <div class="text-center" style="font-size: 0.8rem; color: #6c757d;">
+            GhostMarket Internal Portal &copy; 2025
         </div>
 
-        <h4>Live Intelligence Feed</h4>
-        <div id="feedContainer">Loading...</div>
     </div>
 
-    <script>
-        async function init() {
-            // Check Login
-            const authRes = await fetch("/.netlify/functions/login-user");
-            const auth = await authRes.json();
-            if (!auth || !auth.user) { window.location.href = "login.html"; return; }
-            document.getElementById("userDisplay").textContent = "Analyst: " + auth.user.username;
-
-            // Load Reports
-            const repRes = await fetch("/.netlify/functions/reports");
-            const data = await repRes.json();
-            
-            const container = document.getElementById("feedContainer");
-            if(!data.reports || data.reports.length === 0) { 
-                container.innerHTML = "<p class='text-muted'>No active reports.</p>"; 
-                return; 
-            }
-            
-            container.innerHTML = data.reports.map(r => `
-                <div class="report-card ${r.type}">
-                    <span class="report-title">${r.title}</span>
-                    <div class="report-meta">
-                        Source: ${r.source} | Status: <strong style="text-transform:uppercase;">${r.status}</strong> | Reports: ${r.reports_count}
-                    </div>
-                </div>
-            `).join("");
-        }
-
-        document.getElementById("logoutBtn").addEventListener("click", () => {
-            document.cookie = "session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-            window.location.href = "login.html";
-        });
-
-        init();
-    </script>
 </body>
 </html>
