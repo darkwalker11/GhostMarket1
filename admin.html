@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     
     <style>
-        /* --- STYLES (Includes Word Wrap Fix) --- */
+        /* --- STYLES --- */
         body { margin: 0; padding: 0; background-color: #1c1c1c; color: #bdc0c2; font-family: sans-serif; overflow-x: hidden; }
         .container-smooth { max-width: 1140px; margin: 0 auto; padding: 0 15px; }
         .entry-text { padding: 20px; }
@@ -25,20 +25,20 @@
             min-height: 20px; 
             display: block; 
         }
-        [data-block="wallet_list"] li, [data-block="analysis_services"] li {
-            /* Ensures lists can be edited line by line */
-            padding-left: 1.3em;
-        }
+        [data-block="wallet_list"] li, [data-block="analysis_services"] li { padding-left: 1.3em; }
         
         /* WORD WRAP FIXES */
         .long-words { overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; }
         .force-break, a { word-break: break-all; }
+        ul { list-style: none; padding-left: 0; }
+        .color-change { color: inherit; }
+        .md-center { text-align: center; display: block; }
     </style>
 </head>
 <body class="m-0 p-0">
 
     <div class="admin-bar d-flex justify-content-between align-items-center">
-        <span class="text-warning">ADMIN EDITOR - All text is editable.</span>
+        <span class="text-warning">ADMIN EDITOR</span>
         <div>
             <button class="btn btn-sm btn-success mr-2" onclick="savePage()">Save All Changes</button>
             <a href="dashboard.html" class="btn btn-sm btn-outline-light">Exit Editor</a>
@@ -54,9 +54,7 @@
                             <div class="entry-text">
                                 <article>
                                     
-                                    <div data-block="zone_top" contenteditable="true" style="text-align:center; font-size: 0.8rem; margin-bottom: 10px; height: 30px; border: 1px dashed #444;">
-                                        [ZONE TOP: Editable Banner/Logo Area]
-                                    </div>
+                                    <div data-block="zone_top" contenteditable="true" style="text-align:center; font-size: 0.8rem; margin-bottom: 10px; height: 30px; border: 1px dashed #444;">[ZONE TOP: Editable Banner/Logo Area]</div>
                                     
                                     <h3 class="md-center" data-block="block_1_header" contenteditable="true">
                                         <span class="md-align md-center">Welcome to the Portal - the uncensored world of infinite possibilities.</span>
@@ -112,60 +110,41 @@
                                     </ul>
 
                                     <h6 style="color: #ff751b;">New Section Buffer:</h6>
-                                    <p data-block="block_9_extra" contenteditable="true">
-                                        [EXTRA SECTION: Place new text content here when needed.]
-                                    </p>
+                                    <p data-block="block_9_extra" contenteditable="true">[EXTRA SECTION: Place new text content here when needed.]</p>
 
+                                    <div data-block="zone_bottom" contenteditable="true" style="font-size: 0.7rem; margin-top: 10px; height: 20px; color: #6c757d; border: 1px dashed #444;">[ZONE BOTTOM: Editable Copyright/Disclaimer Area]</div>
 
                                 </article>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="text-center w-100 mb-3">
-                    <hr class="my-2 basement-hr">
-                    <div class="bottom-links">
-                        <a href="#">new</a>·
-                        <a href="#">what</a>·
-                        <a href="#">how</a>·
-                        <a href="#">contacts</a>
-                    </div>
-                    <div data-block="zone_bottom" contenteditable="true" style="font-size: 0.7rem; margin-top: 10px; height: 20px; color: #6c757d; border: 1px dashed #444;">
-                        [ZONE BOTTOM: Editable Copyright/Disclaimer Area]
-                    </div>
-                </div>
-
             </div>
         </div>
     </div>
 
     <script>
-        let contentID = 1; // Always target the single configuration row
+        let contentID = 1; 
         
-        // Fetch content on load
         async function loadContent() {
-            const res = await fetch("/.netlify/functions/cms");
-            const data = await res.json();
-            const config = data.config;
+            try {
+                const res = await fetch("/.netlify/functions/cms");
+                const data = await res.json();
+                const config = data.config;
 
-            if (!config || Object.keys(config).length === 0) {
-                 // If database is empty, the user hasn't run the SQL/inserted the first row yet.
-                 alert("Initial setup required. Please ensure the Master SQL Script ran successfully.");
-                 return;
+                // FIX IS HERE: Only overwrite if the database actually has text!
+                document.querySelectorAll('[data-block]').forEach(el => {
+                    const blockKey = el.getAttribute('data-block');
+                    // Check if DB value exists AND is not empty
+                    if (config && config[blockKey] != null && config[blockKey].trim() !== "") {
+                        el.innerHTML = config[blockKey];
+                    }
+                });
+            } catch (err) {
+                console.log("Database empty or connection error. Using default template.");
             }
-
-            // Iterate over all data-block elements and fill with content from the database
-            document.querySelectorAll('[data-block]').forEach(el => {
-                const blockKey = el.getAttribute('data-block');
-                if (config[blockKey] !== undefined) {
-                    // Use innerHTML to inject the full content (including <li> and bolding)
-                    el.innerHTML = config[blockKey];
-                }
-            });
         }
 
-        // Save Content: Gathers innerHTML from all editable blocks and posts to database
         async function savePage() {
             const saveBtn = document.querySelector('.btn-success');
             saveBtn.disabled = true;
@@ -173,14 +152,11 @@
             
             const payload = { id: contentID };
 
-            // 1. Collect all data
             document.querySelectorAll('[data-block]').forEach(el => {
                 const blockKey = el.getAttribute('data-block');
-                // Use innerHTML to preserve the user's formatting (bold, links, lists)
                 payload[blockKey] = el.innerHTML.trim();
             });
 
-            // 2. Send the full payload to the CMS API (cms.js)
             const res = await fetch('/.netlify/functions/cms', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
@@ -190,18 +166,16 @@
             if (res.ok) {
                 alert("Page content saved successfully!");
             } else {
-                alert("Error saving page. Check logs.");
+                alert("Error saving page.");
             }
 
             saveBtn.disabled = false;
             saveBtn.textContent = 'Save All Changes';
         }
 
-        // Authentication Check
         async function initAuth() {
             const authRes = await fetch("/.netlify/functions/login-user");
             const auth = await authRes.json();
-            
             if (!auth || !auth.user) { 
                 window.location.href = "login.html"; 
                 return; 
