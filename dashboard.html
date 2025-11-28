@@ -3,165 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GhostMarket Intel Dashboard</title>
+    <title>GhostMarket Intel</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <style>
-        /* --- GHOSTMARKET THEME --- */
         body { background-color: #1c1c1c; color: #bdc0c2; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
         .container-smooth { max-width: 900px; margin: 0 auto; padding: 20px; background-color: #262626; min-height: 100vh; border-left: 1px solid #333; border-right: 1px solid #333; }
-        
-        /* Nav */
-        .top-nav { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px solid #444; margin-bottom: 30px; }
-        .user-badge { background-color: #333; padding: 6px 12px; border-radius: 4px; color: #adff2f; border: 1px solid #adff2f; font-size: 0.9rem; font-family: monospace; }
-        
-        /* Report Cards */
-        .report-card { background-color: #333; margin-bottom: 15px; padding: 15px; border-radius: 4px; border-left: 4px solid #007bff; position: relative; }
-        .report-card:hover { background-color: #3d3d3d; }
-        .report-card.critical { border-left-color: #ff4500; } /* Red */
-        .report-card.pending { border-left-color: #ffc107; } /* Yellow */
-        .report-card.secure { border-left-color: #adff2f; } /* Green */
-
-        .report-title { color: #fff; font-weight: 600; margin-bottom: 5px; display: block; font-size: 1.1rem; }
-        .report-meta { font-size: 0.85rem; color: #888; }
-        
-        /* Editing Styles */
-        [contenteditable="true"] { border: 1px dashed #adff2f; background: rgba(173, 255, 47, 0.1); padding: 2px 5px; color: #fff; }
-        
-        /* Buttons */
-        .btn-action { margin-left: 10px; font-size: 0.8rem; }
-        .btn-create { background-color: #007bff; color: white; border: none; padding: 5px 15px; border-radius: 4px; }
-        .btn-edit { background-color: #ff751b; color: white; border: none; padding: 5px 15px; border-radius: 4px; }
-        .btn-save { background-color: #adff2f; color: #1c1c1c; border: none; padding: 5px 15px; border-radius: 4px; display: none; }
+        .report-card { background-color: #333; margin-bottom: 15px; padding: 15px; border-radius: 4px; border-left: 4px solid #007bff; }
+        .report-card.critical { border-left-color: #ff4500; }
+        .report-card.pending { border-left-color: #ffc107; }
+        .report-card.secure { border-left-color: #adff2f; }
+        .report-title { color: #fff; font-weight: 600; font-size: 1.1rem; display: block; }
+        .report-meta { font-size: 0.85rem; color: #888; margin-top: 5px; }
+        .user-badge { border: 1px solid #444; padding: 5px 10px; border-radius: 20px; font-size: 0.8rem; }
     </style>
 </head>
 <body>
 
     <div class="container-smooth">
-        <div class="top-nav">
-            <div class="d-flex align-items-center">
-                <span id="userWelcome" class="user-badge">Loading...</span>
-            </div>
-            <div>
-                <button onclick="createReport()" class="btn-create">+ New Entry</button>
-                <button id="editBtn" onclick="toggleEditMode()" class="btn-edit btn-action">Edit Mode</button>
-                <button id="logoutBtn" class="btn btn-outline-secondary btn-sm btn-action">Exit</button>
-            </div>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <span class="user-badge" id="userDisplay">Verifying...</span>
+            <button id="logoutBtn" class="btn btn-sm btn-outline-secondary">Disconnect</button>
         </div>
 
         <h4>Live Intelligence Feed</h4>
-        <div id="feedContainer">
-            <p class="text-center mt-5">Connecting to database...</p>
-        </div>
+        <div id="feedContainer">Loading...</div>
     </div>
 
     <script>
-        let reportsData = []; 
-
         async function init() {
-            // 1. Check Login
+            // Check Login
             const authRes = await fetch("/.netlify/functions/login-user");
             const auth = await authRes.json();
             if (!auth || !auth.user) { window.location.href = "login.html"; return; }
-            document.getElementById("userWelcome").textContent = auth.user.username;
+            document.getElementById("userDisplay").textContent = "Analyst: " + auth.user.username;
 
-            // 2. Load Data
-            loadReports();
-        }
-
-        async function loadReports() {
+            // Load Reports
             const repRes = await fetch("/.netlify/functions/reports");
             const data = await repRes.json();
             
-            if(data.reports) {
-                reportsData = data.reports;
-                renderFeed(reportsData);
-            }
-        }
-
-        function renderFeed(reports) {
             const container = document.getElementById("feedContainer");
-            if(reports.length === 0) { 
-                container.innerHTML = "<p class='text-muted text-center mt-5'>Database Empty.<br>Click <strong>+ New Entry</strong> to start.</p>"; 
+            if(!data.reports || data.reports.length === 0) { 
+                container.innerHTML = "<p class='text-muted'>No active reports.</p>"; 
                 return; 
             }
             
-            container.innerHTML = reports.map(r => `
-                <div class="report-card ${r.type}" data-id="${r.id}">
-                    <span class="report-title" data-field="title">${r.title}</span>
+            container.innerHTML = data.reports.map(r => `
+                <div class="report-card ${r.type}">
+                    <span class="report-title">${r.title}</span>
                     <div class="report-meta">
-                        Source: <span data-field="source">${r.source}</span> | 
-                        Status: <span data-field="status" style="text-transform:uppercase;">${r.status}</span> | 
-                        Reports: <span data-field="reports_count">${r.reports_count}</span>
+                        Source: ${r.source} | Status: <strong style="text-transform:uppercase;">${r.status}</strong> | Reports: ${r.reports_count}
                     </div>
                 </div>
             `).join("");
-        }
-
-        // --- NEW: CREATE REPORT FUNCTION ---
-        async function createReport() {
-            const title = prompt("Enter a Title for the new report (e.g., 'New Crypto Scam'):");
-            if (!title) return;
-
-            const newReport = {
-                title: title,
-                status: "ACTIVE",
-                source: "Web",
-                type: "critical", // Default color (red)
-                reports_count: 1
-            };
-
-            // Send to database
-            await fetch('/.netlify/functions/reports', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ data: newReport })
-            });
-
-            // Refresh the screen
-            loadReports();
-        }
-
-        // --- EDIT MODE LOGIC ---
-        function toggleEditMode() {
-            const btn = document.getElementById("editBtn");
-            const isEditing = btn.textContent.includes("Save");
-            const fields = document.querySelectorAll("[data-field]");
-
-            if (!isEditing) {
-                // TURN ON EDITING
-                fields.forEach(f => f.setAttribute("contenteditable", "true"));
-                btn.textContent = "Save Changes";
-                btn.style.backgroundColor = "#adff2f"; // Green
-                btn.style.color = "#1c1c1c";
-            } else {
-                // TURN OFF & SAVE
-                fields.forEach(f => f.setAttribute("contenteditable", "false"));
-                btn.textContent = "Edit Mode";
-                btn.style.backgroundColor = "#ff751b"; // Orange
-                btn.style.color = "white";
-                saveAllChanges();
-            }
-        }
-
-        async function saveAllChanges() {
-            const cards = document.querySelectorAll(".report-card");
-            
-            for (let card of cards) {
-                const id = card.dataset.id;
-                const title = card.querySelector('[data-field="title"]').textContent;
-                const source = card.querySelector('[data-field="source"]').textContent;
-                const status = card.querySelector('[data-field="status"]').textContent;
-                
-                // Send update to DB
-                await fetch('/.netlify/functions/reports', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ 
-                        data: { id: id, title: title, source: source, status: status } 
-                    })
-                });
-            }
-            alert("All changes saved to database.");
         }
 
         document.getElementById("logoutBtn").addEventListener("click", () => {
