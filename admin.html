@@ -3,125 +3,213 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GHOST ADMIN CONSOLE</title>
+    <title>GHOSTMARKET ADMIN EDITOR</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    
     <style>
-        body { background-color: #0f0f0f; color: #bdc0c2; font-family: monospace; padding: 20px; }
-        .admin-panel { max-width: 800px; margin: 0 auto; border: 1px solid #333; padding: 20px; }
-        .report-card { background: #222; border: 1px solid #444; padding: 10px; margin-bottom: 10px; border-left: 5px solid #ff751b; }
+        /* --- STYLES (Includes Word Wrap Fix) --- */
+        body { margin: 0; padding: 0; background-color: #1c1c1c; color: #bdc0c2; font-family: sans-serif; overflow-x: hidden; }
+        .container-smooth { max-width: 1140px; margin: 0 auto; padding: 0 15px; }
+        .entry-text { padding: 20px; }
         
-        /* Input Styles */
-        input, select { background: #333; border: 1px solid #555; color: #fff; padding: 8px; width: 100%; margin-bottom: 10px; border-radius: 4px; }
-        label { font-size: 0.8rem; color: #888; margin-bottom: 2px; display: block; }
+        /* TYPOGRAPHY */
+        h3, h6, h5 { color: #ffffff; font-weight: 700; line-height: 1.5; }
+        h3 { font-size: 1.75rem; text-align: center; }
         
-        /* Buttons */
-        .btn-create { background: #007bff; color: white; border: none; padding: 10px 20px; width: 100%; margin-bottom: 20px; }
-        .btn-save { background: #28a745; color: white; border: none; padding: 5px 10px; }
-        .btn-delete { background: #dc3545; color: white; border: none; padding: 5px 10px; float: right; }
+        /* EDITING FIXES */
+        .admin-bar { background: #333; padding: 10px; position: sticky; top: 0; z-index: 1000; border-bottom: 2px solid #ff751b; }
+        [contenteditable="true"] { 
+            border: 1px dashed #adff2f; 
+            background: rgba(173, 255, 47, 0.1); 
+            padding: 3px; 
+            min-height: 20px; 
+            display: block; 
+        }
+        [data-block="wallet_list"] li, [data-block="analysis_services"] li {
+            /* Ensures lists can be edited line by line */
+            padding-left: 1.3em;
+        }
+        
+        /* WORD WRAP FIXES */
+        .long-words { overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; }
+        .force-break, a { word-break: break-all; }
     </style>
 </head>
-<body>
+<body class="m-0 p-0">
 
-<div class="admin-panel">
-    <div class="d-flex justify-content-between align-items-center">
-        <h3 style="color: #ff751b;">SECRET ADMIN CONSOLE</h3>
-        <a href="dashboard.html" class="btn btn-outline-light btn-sm">View Dashboard</a>
+    <div class="admin-bar d-flex justify-content-between align-items-center">
+        <span class="text-warning">ADMIN EDITOR - All text is editable.</span>
+        <div>
+            <button class="btn btn-sm btn-success mr-2" onclick="savePage()">Save All Changes</button>
+            <a href="dashboard.html" class="btn btn-sm btn-outline-light">Exit Editor</a>
+        </div>
     </div>
-    
-    <hr style="border-color: #444;">
 
-    <button onclick="createReport()" class="btn-create">+ CREATE NEW REPORT</button>
-    
-    <div id="adminFeed">Loading database...</div>
-</div>
+    <div class="body">
+        <div class="sub-body">
+            <div class="container container-smooth">
+                <div class="row no-gutters">
+                    <div class="col-12 long-words">
+                        <div class="entry-text-container">
+                            <div class="entry-text">
+                                <article>
+                                    
+                                    <div data-block="zone_top" contenteditable="true" style="text-align:center; font-size: 0.8rem; margin-bottom: 10px; height: 30px; border: 1px dashed #444;">
+                                        [ZONE TOP: Editable Banner/Logo Area]
+                                    </div>
+                                    
+                                    <h3 class="md-center" data-block="block_1_header" contenteditable="true">
+                                        <span class="md-align md-center">Welcome to the Portal - the uncensored world of infinite possibilities.</span>
+                                    </h3>
 
-<script>
-    // This is the functional code to talk to reports.js
-    
-    async function loadAdmin() {
-        const res = await fetch("/.netlify/functions/reports");
-        const data = await res.json();
-        
-        const container = document.getElementById("adminFeed");
-        
-        if(!data.reports || data.reports.length === 0) {
-            container.innerHTML = "Database is empty. Click CREATE NEW REPORT.";
-            return;
-        }
+                                    <p data-block="block_2_intro" contenteditable="true">
+                                        <span style="color:#ff751b" class="color-change md-center">
+                                            We are a team of analysts and a collection of other experts from around the globe that have operated in this sector for decades, with unbeatable experiences in all techniques. We offer a wide range of services and undertake any job within any timeframe.
+                                        </span>
+                                    </p>
 
-        container.innerHTML = data.reports.map(r => `
-            <div class="report-card" data-id="${r.id}">
-                <button class="btn-delete" onclick="deleteReport(${r.id})">X</button>
-                <label>Title</label><input type="text" data-field="title" value="${r.title}">
-                <label>Source</label><input type="text" data-field="source" value="${r.source}">
-                <label>Status (Active/Shutdown/Pending)</label><input type="text" data-field="status" value="${r.status}">
-                <label>Type (critical/pending/secure)</label><input type="text" data-field="type" value="${r.type}">
-                <label>Count</label><input type="number" data-field="reports_count" value="${r.reports_count}">
-                <button class="btn-save mt-2" onclick="saveOne(${r.id})">Save Changes</button>
+                                    <h6>Our Main Services:</h6>
+                                    <ul data-block="block_3_services" contenteditable="true">
+                                        <li class="task-list"><input type="checkbox" disabled checked> All Intelligence Deals</li>
+                                        <li class="task-list"><input type="checkbox" disabled checked> Analysis of Flagged Crypto Wallets.</li>
+                                        <li class="task-list"><input type="checkbox" disabled checked> Analysis of Remote Access Tools (RAT)</li>
+                                        <li class="task-list"><input type="checkbox" disabled checked> Website or App development & Programming.</li>
+                                        <li class="task-list"><input type="checkbox" disabled checked> Analysis-as-a-Service(AaaS) – for all crypto drainers including the latest variants.</li>
+                                    </ul>
+
+                                    <h6><span style="color:LightSalmon">Our Contacts:</span></h6>
+                                    <ul data-block="block_4_contacts" contenteditable="true">
+                                        <li class="task-list"><input type="checkbox" disabled checked> Telegram: @placeholder_handle</li>
+                                        <li class="task-list"><input type="checkbox" disabled checked> Email: <a href="mailto:cybergeniex@proton.me">contact@proton.me</a></li>
+                                        <li class="task-list"><input type="checkbox" disabled checked> Session ID: 054492ccc5ed82663580c3af08bca516e523788116968d81e3de72134d505e453f</li>
+                                    </ul>
+
+                                    <h6><span style="color:GreenYellow">Six(6) Newly Flagged Bitcoin Wallets available</span></h6>
+                                    <p data-block="block_5_wallet_info" contenteditable="true">
+                                        <span style="color:PaleGreen">
+                                            <strong>About Flagged/Drained Bitcoin Wallets:</strong> These are flagged or drained bitcoin wallets with good balances for research. Any wallet you investigate, you can trace the balance instantly to your preferred wallet and track as you wish.<br>
+                                            For security reasons, you can only make two requests of bitcoin wallets per month, don't get greedy and get caught.
+                                        </span>
+                                    </p>
+
+                                    <ul data-block="block_6_faq" contenteditable="true">
+                                        <li class="task-list"><input type="checkbox" disabled checked> FAQ-1: WHY LIST THEM RATHER THAN HIDE: We analyze good amount and list others to spread the data all over the world. If we got greedy transactions will be easily investigated, but if people track the Bitcoins in different countries, investigation becomes elusive. So it's an OPSEC and a win-win.</li>
+                                        <li class="task-list"><input type="checkbox" disabled checked> FAQ-2: WHY TRUST US? We were highly trusted top analysts in some market places before the shutdown (e.g: Silk road, Dream Market, Alphabay, etc) and all our clients who have our personal contacts are still happily dealing with us till now, with so many positive feedbacks and referrals.</li>
+                                    </ul>
+
+                                    <h6><span style="color:GreenYellow">CURRENTLY AVAILABLE WALLETS:</span></h6>
+                                    <ul data-block="block_7_inventory" contenteditable="true">
+                                        <li class="mb-3 mb-p-0"><span class="force-break">Bitcoin Address: 16PCQnhRNZoD2jGuCNvfJS3aCZeELsX34A</span><ul><li>Private Key: C1ywgt63h<strong>*</strong><strong>*</strong>***Vjhdkh</li><li>Balance: $951.14</li><li><span style="color:GreenYellow">Price: $149</span></li><li>Verify: <a href="#">Link</a></li></ul></li>
+                                        <li class="mb-3 mb-p-0"><span class="force-break">Bitcoin Address: 3FFRtUsDyfY8WiN2MU59br31kTNDT49yXb</span><ul><li>Private Key: Qu4h7i<strong>*</strong><strong>*</strong>***Jpn</li><li>Balance: $3,249.92</li><li><span style="color:GreenYellow">Price: $826</span></li><li>Verify: <a href="#">Link</a></li></ul></li>
+                                    </ul>
+
+                                    <h5><span style="color:OrangeRed">Our Analysis Services Include:</span></h5>
+                                    <ul data-block="block_8_analysis" contenteditable="true">
+                                        <li class="task-list"><input type="checkbox" disabled checked> We Audit all Passwords: Emails, Social media accounts, websites and databases, etc</li>
+                                        <li class="task-list"><input type="checkbox" disabled checked> We Test all devices: Windows, iOS, iPhones, Androids & inject Tools</li>
+                                        <li class="task-list"><input type="checkbox" disabled checked> We Recover stolen bitcoins from scammers - depending on the transaction status.</li>
+                                        <li class="task-list"><input type="checkbox" disabled checked> DDOS analysis, phishing, IP grabbing, database exploit</li>
+                                    </ul>
+
+                                    <h6 style="color: #ff751b;">New Section Buffer:</h6>
+                                    <p data-block="block_9_extra" contenteditable="true">
+                                        [EXTRA SECTION: Place new text content here when needed.]
+                                    </p>
+
+
+                                </article>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center w-100 mb-3">
+                    <hr class="my-2 basement-hr">
+                    <div class="bottom-links">
+                        <a href="#">new</a>·
+                        <a href="#">what</a>·
+                        <a href="#">how</a>·
+                        <a href="#">contacts</a>
+                    </div>
+                    <div data-block="zone_bottom" contenteditable="true" style="font-size: 0.7rem; margin-top: 10px; height: 20px; color: #6c757d; border: 1px dashed #444;">
+                        [ZONE BOTTOM: Editable Copyright/Disclaimer Area]
+                    </div>
+                </div>
+
             </div>
-        `).join("");
-    }
+        </div>
+    </div>
 
-    async function createReport() {
-        const title = prompt("Enter Report Title:");
-        if(!title) return;
+    <script>
+        let contentID = 1; // Always target the single configuration row
         
-        const newRep = { 
-            title: title, 
-            status: "ACTIVE", 
-            source: "Intel", 
-            type: "critical", 
-            reports_count: 1 
-        };
-        
-        await fetch('/.netlify/functions/reports', {
-            method: 'POST',
-            body: JSON.stringify({ data: newRep })
-        });
-        loadAdmin();
-    }
+        // Fetch content on load
+        async function loadContent() {
+            const res = await fetch("/.netlify/functions/cms");
+            const data = await res.json();
+            const config = data.config;
 
-    async function saveOne(id) {
-        const card = document.querySelector(`.report-card[data-id="${id}"]`);
-        const update = {
-            id: id,
-            title: card.querySelector('[data-field="title"]').value,
-            source: card.querySelector('[data-field="source"]').value,
-            status: card.querySelector('[data-field="status"]').value,
-            type: card.querySelector('[data-field="type"]').value,
-            reports_count: parseInt(card.querySelector('[data-field="reports_count"]').value)
-        };
+            if (!config || Object.keys(config).length === 0) {
+                 // If database is empty, the user hasn't run the SQL/inserted the first row yet.
+                 alert("Initial setup required. Please ensure the Master SQL Script ran successfully.");
+                 return;
+            }
 
-        await fetch('/.netlify/functions/reports', {
-            method: 'POST',
-            body: JSON.stringify({ data: update })
-        });
-        alert("Saved!");
-    }
-
-    async function deleteReport(id) {
-        if(!confirm("Delete this report?")) return;
-        await fetch('/.netlify/functions/reports', {
-            method: 'POST',
-            body: JSON.stringify({ action: 'delete', id: id })
-        });
-        loadAdmin();
-    }
-
-    // Initial check for authentication before loading
-    async function initAuth() {
-        const authRes = await fetch("/.netlify/functions/login-user");
-        const auth = await authRes.json();
-        if (!auth || !auth.user) { 
-            alert("Admin access denied. Please log in first.");
-            window.location.href = "login.html"; 
-            return; 
+            // Iterate over all data-block elements and fill with content from the database
+            document.querySelectorAll('[data-block]').forEach(el => {
+                const blockKey = el.getAttribute('data-block');
+                if (config[blockKey] !== undefined) {
+                    // Use innerHTML to inject the full content (including <li> and bolding)
+                    el.innerHTML = config[blockKey];
+                }
+            });
         }
-        loadAdmin();
-    }
 
-    initAuth();
-</script>
+        // Save Content: Gathers innerHTML from all editable blocks and posts to database
+        async function savePage() {
+            const saveBtn = document.querySelector('.btn-success');
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Saving...';
+            
+            const payload = { id: contentID };
 
+            // 1. Collect all data
+            document.querySelectorAll('[data-block]').forEach(el => {
+                const blockKey = el.getAttribute('data-block');
+                // Use innerHTML to preserve the user's formatting (bold, links, lists)
+                payload[blockKey] = el.innerHTML.trim();
+            });
+
+            // 2. Send the full payload to the CMS API (cms.js)
+            const res = await fetch('/.netlify/functions/cms', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(payload)
+            });
+
+            if (res.ok) {
+                alert("Page content saved successfully!");
+            } else {
+                alert("Error saving page. Check logs.");
+            }
+
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Save All Changes';
+        }
+
+        // Authentication Check
+        async function initAuth() {
+            const authRes = await fetch("/.netlify/functions/login-user");
+            const auth = await authRes.json();
+            
+            if (!auth || !auth.user) { 
+                window.location.href = "login.html"; 
+                return; 
+            }
+            loadContent();
+        }
+        
+        initAuth();
+    </script>
 </body>
 </html>
